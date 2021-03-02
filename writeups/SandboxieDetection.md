@@ -90,14 +90,14 @@ To create a PoC for this, I needed to figure out the *exact* conditions for the 
 
 A semi-reliable way to confirm that you are in a sandbox after following the final 'no' flow-path is to check ``GetLastError()`` when you can't call ``TerminateProcess`` - if you ever get [MSDN](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-) ``ERROR_ACCESS_DENIED (0x05)`` then you can be pretty sure that you are running in a sandbox environment, this is what I've used in [my initial PoC on Github](https://github.com/michaellrowley/Sandboxie-detection).
 
-### Loaded DLLs
+It is always worth understanding why something is possible even if you've discovered it by chance (like the ``TerminateProcess`` detection method) - we know that the method works by attempting to terminate each ``SbieSvc.exe`` process available and comparing their error code to ``ERROR_ACCESS_DENIED`` - only one of the ``SbieSvc.exe`` processes actually returns ``0x05`` when a sandboxed program attempts to terminate it, the other two simply disallow the processes to open handles to them, this is because they operate under ``NT AUTHORITY\SYSTEM`` and our program executes under the client's username, as a result of this, we can't open a handle to them. (Sidenote: One of the two processes is always running, the other starts when a program is placed into the sandbox but from then on, is also always running, the third (that we use to detect the sandbox) runs for a brief window while the sandbox instance is being created.)
+
+The third process, however, executes in the same space as the client, meaning that opening a handle is possible, and the service must deny access when the sandboxed application calls ``TerminateProcess`` to avoid closing - making the detection possible due to its distinct ``ERROR_ACCESS_DENIED`` ``GetLastError()`` code.
+
+### Sidenote: Loaded DLLs
 
 The DLLs loaded into a process are usually a good giveaway of the programs using it (that is unless the DLLs are loaded through other, harder to detect, methods such as common manual-mapping) - a [StackExchange post](https://security.stackexchange.com/questions/215502/program-detecting-sandboxie-present-how-to-prevent) showed a user complaining about a game detecting itself being run in a sandboxed mode, he/she said that the game detected ``the presence of "SbieDll.dll" in the module list of the game[']s process.`` - I figured that the ``SbieDll.dll`` check sounded too easy to be true and, if Sandboxie+ loaded any DLLs, they'd be randomly named or at-least loaded in a way that wouldn't show them in module listings (again, Manual-mapping) - so I wrote a simple program that should operate without too many flaws in a sandbox environment (if you're wondering, it says 'beep', waits five hundred milliseconds, and then says 'boop'), loaded it into Sandboxie+, launched ProcessHacker 2, and checked the openly loaded modules; to my surprise, there is was - ``SbieDll.dll`` was sat in the ``Properties->Modules`` tab of the loaded process.
 
 While this seemed like a huge oversight, I assumed that it was due to Sandboxie+ not really caring about being detected.
 
-## Conclusion
-
-Sandboxie+ does not (openly) hide its presence from processes, it does not hide any information regarding open processes, and as a result, lets processes know when they are being executed under Sandboxie via the use of ``TerminateProcess(n)`` and some error-code-fu (``ACCESS_DENIED``).
-
-If you'd like to test the above sandbox-detection for yourself, you can use [my proof-of-concept here](https://github.com/michaellrowley/Sandboxie-detection).
+This writeup's purpose is to cover a new way to detect sandboxes that I haven't seen in the wild before, this is by no means an exhaustive list (or even a list at all) and should not be treated as such, using ``CreateFile`` to create and track files' existence is another common way to detect sandboxes, with the most popular (from my analysis) being for a program to check its loaded DLLs for a sandbox signature or DLL-name. Different sandboxes have different detection vectors and each (most) require analysis.
