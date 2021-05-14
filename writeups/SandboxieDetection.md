@@ -1,9 +1,5 @@
 # Detecting sandboxes
 
-### ***The indefinitive solution.***
-
-
-
 ## What are sandboxes?
 
 Sandboxes are a (conceptually) secure way to execute software without exposing the computer's information to the program - most antiviruses ([Kaspersky](https://www.kaspersky.com/enterprise-security/malware-sandbox), [Bitdefender](https://www.bitdefender.com/business/enterprise-products/sandbox-analyzer.html), and even [Windows's default antivirus](https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-sandbox/windows-sandbox-overview)) are delivered pre-equipped with a sandboxing feature, not to mention that almost every heuristic analysis tool will execute programs in some form of their own sandbox (this includes [any.run](https://any.run), [anlyz.io](https://anlyz.io), [hybrid-analysis](https://www.hybrid-analysis.com/), and [cuckoo sandbox](https://cuckoosandbox.org/)) - this means that malicious programs (in theory) are unable to access any files, and any attempt to do so can be logged and identified by the analysis team/software.
@@ -88,7 +84,7 @@ To create a PoC for this, I needed to figure out the *exact* conditions for the 
 
 <img src="https://i.ibb.co/BLLkF8m/image.png" alt="The PoC methodology flowchart." style="zoom:50%;"/>
 
-A semi-reliable way to confirm that you are in a sandbox after following the final 'no' flow-path is to check ``GetLastError()`` when you can't call ``TerminateProcess`` - if you ever get [MSDN](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-) ``ERROR_ACCESS_DENIED (0x05)`` then you can be pretty sure that you are running in a sandbox environment, this is what I've used in [my initial PoC on Github](https://github.com/michaellrowley/Sandboxie-detection).
+A semi-reliable way to confirm that you are in a sandbox after following the final 'no' flow-path is to check ``GetLastError()`` when you can't call ``TerminateProcess`` - if you ever get [MSDN](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-) ``ERROR_ACCESS_DENIED (0x05)`` then you can be pretty sure that you are running in a sandbox environment, this is what I've used in [my initial PoC on Github](https://github.com/michaellrowley/Palmettos/blob/main/PoCs/SandboxieDetection/SandboxieDetection.cpp).
 
 It is always worth understanding why something is possible even if you've discovered it by chance (like the ``TerminateProcess`` detection method) - we know that the method works by attempting to terminate each ``SbieSvc.exe`` process available and comparing their error code to ``ERROR_ACCESS_DENIED`` - only one of the ``SbieSvc.exe`` processes actually returns ``0x05`` when a sandboxed program attempts to terminate it, the other two simply disallow the processes to open handles to them, this is because they operate under ``NT AUTHORITY\SYSTEM`` and our program executes under the client's username, as a result of this, we can't open a handle to them. (Sidenote: One of the two processes is always running, the other starts when a program is placed into the sandbox but from then on, is also always running, the third (that we use to detect the sandbox) runs for a brief window while the sandbox instance is being created.)
 
