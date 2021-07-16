@@ -42,9 +42,12 @@ img:hover {
 
 a, a:visited, a:active {
     text-decoration: none;
-	color: #777777;
+	color: inherit;
 	font-size: 4vh;
 	transition: color 0.5s ease-in-out;
+}
+a {
+	color: #777777;
 }
 a:hover {
 	color: #FFFFFF;
