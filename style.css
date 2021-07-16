@@ -7,16 +7,18 @@
     }
 }
 
+h1, body, img, p, h2, a {
+	animation-name: fadeinOpac;
+	animation-duration: 2s;
+	animation-fill-mode: forwards;
+}
+
 body {
     background-image: linear-gradient(to right, rgb(10, 10, 10), rgb(20, 20, 20));
 }
 
 #title {
     font-family: Source Sans Pro;
-    animation-name: fadeinOpac;
-    animation-duration: 6s;
-    animation-fill-mode: forwards;
-    opacity: 0;
     font-size: 10vh;
     font-weight: lighter;
     color: rgb(223, 222, 224);
@@ -25,43 +27,36 @@ body {
 #introduction {
     color: rgb(223, 222, 224);
     font-family: Source Sans Pro;
-    animation-name: fadeinOpac;
-    animation-duration: 6s;
-    animation-fill-mode: forwards;
-    opacity: 0;
     font-size: 2vh;
     font-weight: lighter;
     margin-top: -2%;
 }
 
 img {
-    animation-name: fadeinOpac;
-    animation-duration: 5s;
-    animation-fill-mode: forwards;
-    opacity: 0;
+	transition: box-shadow 0.2s ease-in-out;
     margin-top: -1vh;
 }
-a, a:hover, a:visited, a:active {
+img:hover {
+	box-shadow: 5px 5px 7px #222222;
+}
+
+a, a:visited, a:active {
     text-decoration: none;
-    color: inherit;
+	color: #777777;
+	font-size: 4vh;
+	transition: color 0.5s ease-in-out;
+}
+a:hover {
+	color: #FFFFFF;
 }
 
 #certs_header {
-    animation-name: fadeinOpac;
-    animation-duration: 3s;
-    animation-fill-mode: forwards;
-    opacity: 0;
     color: rgb(192, 192, 192);
     font-family: Source Sans Pro;
     font-weight: 100;
-    font-size: 5vh;
 }
 
 h2 {
-    animation-name: fadeinOpac;
-    animation-duration: 3s;
-    animation-fill-mode: forwards;
-    opacity: 0;
     color: rgb(192, 192, 192);
     font-family: Source Sans Pro;
     font-weight: 100;
@@ -73,8 +68,10 @@ h2 {
     animation-name: fadeinOpac;
     animation-duration: 3s;
     animation-fill-mode: forwards;
-    opacity: 0;
     color: rgb(192, 192, 192);
     font-family: Source Sans Pro;
     font-weight: 100;
+}
+h1 {
+	margin-top: 0;
 }
