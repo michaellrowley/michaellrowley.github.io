@@ -122,6 +122,9 @@ h2, em {
         text-align: center;
         width: 100%;
     }
+    #scroll-hint, #header-bar {
+        visibility: hidden;
+    }
     #rest-of-page {
         opacity: 1;
     }
