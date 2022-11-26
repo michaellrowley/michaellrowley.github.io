@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="./index.css">
+    </head>
+    <body>
+        <div id="header-bar">
+            <h3>MICHAEL ROWLEY</h3>
+        </div>
+        <div id="header-block">
+            <h1>Michael Rowley</h1>
+            <h2 class="hover-opacity" id="tagline">Researching unique problems</h2>
+            </br>
+            <div id="header-links">
+                <p>
+                    <a href="https://www.linkedin.com/in/michaellrowley/">LinkedIn</a><a href="mailto:michaellrowley@protonmail.com">Email</a><a href="https://github.com/michaellrowley/">GitHub</a>
+                </p>
+            </div>
+            <p id="scroll-hint">(scroll down)</p>
+        </div>
+        <div id="rest-of-page">
+            <div class="block">
+                <h2>Career</h2>
+                <p style="margin-top: -30px;font-family: MontserratMedium;">
+                    Right now, I am studying a number of A-Levels with the prospect of getting a degree after
+                    finishing them.
+                    I'm looking at undergraduate degrees in computer science and degree
+                    apprenticeships in software engineering/cybersecurity but am being highly
+                    selective about applying for the latter as I view apprenticeships as opportunities
+                    to work my way up the ladder at organizations with whom I would like to pursue a
+                    long-term career (in addition to gateways to real-world experience and recognised
+                    qualifications).
+                </br>
+                    For this reason, I am only applying to companies that I am interested in and that have
+                    fascinating work with possible continuing opportunities for personal development and progression.
+                </br></br>
+                    I have completed a number of formally recognized qualifications in advanced C programming (from
+                    a <em>Dartmouth University</em> and <em>Institut Mines-Télécom</em> initiative) and C++
+                    programming (from <em>LinkedIn Learning</em>). Links to the resulting certificates can be
+                    found on <a href="https://www.linkedin.com/in/michaellrowley/">my LinkedIn profile</a>.
+                </br></br>
+                    Completing virtual work experience placements at Thales and BAE Systems has given me
+                    a variety of insight into the how the technology industry operates, what skills are invaluable
+                    in certain sectors, and has also allowed me to vastly improve my teamworking and communication
+                    skills.
+                </p>
+                <h3>
+                    "Michael has been a thorough and dedicated hacker and I enjoy receiving reports from him."
+                </h3>
+                <h4 style="text-align: center;margin-top: -10px;font-family: MontserratMedium;">
+                    <i>
+                    - private vulnerability disclosure programme manager at a company with over 450m users.
+                    </i>
+                </h3>
+                <p style="font-family: MontserratMedium;">
+                    Over the last three years, I have been discovering and disclosing security vulnerabilities
+                    in a combination of open/closed-source code - these vulnerabilities have ranged from
+                    <a href="https://huntr.dev/bounties/d4db0a12-184a-429b-8f76-a3cf8ae07dc3/">out-of-bound
+                    reads in a Windows driver</a> to race conditions in support software, to a combination of
+                    MFA and primary authentication bypasses in a cryptocurrency platform's login page (the
+                    latter two were reported via invite-only programmes and therefore I cannot link any report
+                    or name the involved companies).
+                    </br>
+                </p>
+            </div>
+            <div class="block">
+                <h2>Projects</h2>
+                <p style="margin-top: -30px;font-family: MontserratMedium;">
+                    I'm extremely interested in low-level systems programming,
+                    C++, C, C#, Python, and reverse engineering.
+                </br>
+                    Facing problems in some of these areas has led to the development of numerous programs,
+                    some of which have been released as open-source software:
+                </p>
+                <div id="projects-box">
+                    <div class="project-item">
+                        <h3>AQArm</h3>
+                        <p>
+                            A simplistic UI-driven interpreter of a limited <em>ARM</em> subset.
+                            Written in <em>C++</em> using the <em>Qt Framework</em> and designed with future
+                            modularity in mind, making additions to the instruction-set much simpler.
+                        </p>
+                    </div>
+                    <div class="project-item">
+                        <h3>SiteMon</h3>
+                        <p>
+                            A Windows tool for monitoring websites for source-level changes
+                            in content, this project is configurable via regular expressions,
+                            timeouts, custom user-agents, and exportable (encrypted) configuration files.
+                            Written in <em>C#</em> using the <em>.NET framework</em> and <em>WinForms</em> for the user-interface.
+                        </p>
+                    </div>
+                    <div class="project-item">
+                        <h3>Error obfuscator</h3>
+                        <p>
+                            A tool for obfuscating the hardcoded values of enumerations whilst
+                            maintaining certain aspects (i.e, positive/negative evaluations which
+                            are commonly used in conditional statements, etc.). Written in <em>C++</em> as a
+                            console application.
+                        </p>
+                    </div>
+                    <div class="project-item">
+                        <h3>PNG-CMD</h3>
+                        <p>
+                            A command-line application that allows users to explore the internals
+                            of PNG image files and their comprising chunks. Written in <em>modern C</em> and
+                            thoroughly tested using fuzzing (<em>AFL-Fuzz</em>) and a code assurance platform (<em>Codacy</em>).
+                        </p>
+                    </div>
+                    <div class="project-item">
+                        <h3>PE-Imports</h3>
+                        <p>
+                            A <em>Python</em> script that enumerates over files or directories, printing the imports
+                            of all executables that it finds. This script is currently configured to only search
+                            for Windows drivers (using a <em>glob</em> query) but can easily be modified. A good
+                            use-case for this script is to have a large directory of interesting drivers which the
+                            script would then scan for interesting API imports (which depending on your classification of
+                            'interesting', might range from <em>ExAllocatePool</em> to <em>DbgPrintEx</em>).
+                        </p>
+                    </div>
+                    <div class="project-item">
+                        <h3>T2-Lib</h3>
+                        <p>
+                            A performant, secure <em>C++ library</em> which leverages the <em>boost.asio</em> framework
+                            to deliver an object-oriented networking model that can easily be used by
+                            other programs. This project was written in <em>C++ (17/20)</em> and is actively being used
+                            in another personal project.
+                        </p>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://www.michaelrowley.dev/index.js"></script>
+    </body>
+</html>

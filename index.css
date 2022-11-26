@@ -1,0 +1,193 @@
+@font-face {
+    font-family: Montserrat;
+    src: url('./Montserrat/Montserrat-Bold.ttf');
+}
+
+@font-face {
+    font-family: MontserratMedium;
+    src: url('./Montserrat/Montserrat-Medium.ttf');
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+* {
+    cursor: default;
+}
+
+body {
+    background-color: rgb(24, 31, 41);
+    margin-left: 50px;
+    animation: 0.8s fadein;
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opactiy: 1;
+    }
+}
+
+@keyframes titledropin {
+    from {
+        margin-top: 275px;
+    }
+    to {
+        margin-top: 200px;
+    }
+}
+
+p, a, h3, h4 {
+    color: #ebebeb;
+    font-family: Montserrat;
+}
+
+a:hover {
+    cursor: pointer;
+}
+
+h1 {
+    font-family: Montserrat;
+    font-size: 70px;
+    color: #ebebeb;
+}
+
+h2 {
+    font-family: Montserrat;
+    font-size: 40px;
+}
+h2, em {
+    font-style: normal;
+    background: -webkit-linear-gradient(315deg, rgba(0,187,203,1) 0%, rgba(0,233,255,1) 50%, rgba(0,247,255,1) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#header-block h2 {
+    margin-left: 30px;
+}
+
+.hover-opacity {
+    opacity: 90%;
+    transition-duration: 0.5s;
+}
+
+.hover-opacity:hover {
+    opacity: 100%;
+}
+
+#header-block {
+    margin-top: 200px;
+    animation: 0.5s titledropin;
+    transition: 0.3s;
+}
+
+@media screen and (min-width: 1350px) {
+    #header-block h1, #header-block h2 {
+        display: inline-block;
+    }
+}
+
+
+#header-links {
+    font-size: 20px;
+    margin-top: -70px;
+    margin-left: -25px;
+}
+
+#rest-of-page {
+    opacity: 0;
+    transition: 0.4s;
+    width: 70%;
+    min-width: 600px;
+    margin: 0 auto;
+}
+
+@media screen and (max-width: 1349px) {
+    #header-block h1 {
+        text-align: center;
+    }
+    #header-block h2 {
+        margin-top: -50px;
+        text-align: center;
+        font-size: 30px;
+    }
+    #header-links {
+        font-size: 15px;
+        margin-top: -50px;
+        text-align: center;
+        width: 100%;
+    }
+    #rest-of-page {
+        opacity: 1;
+    }
+    p {
+        font-size: 25px;
+    }
+}
+
+#header-links p a {
+    opacity: 0.8;
+    transition: 0.2s;
+    color: rgba(0,247,255,1);
+    margin-left: 30px;
+    text-decoration: underline dotted 2px;
+}
+#header-links p a:hover {
+    color: white;
+    opacity: 1;
+}
+
+.block {
+    /* margin-top: 350px; */
+    height: fit-content;
+    padding: 10px;
+}
+
+.block h2 {
+    opacity: 1;
+    color: white;
+}
+
+.project-item {
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    width: 100%;
+    padding: 15px 15px 0 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+.project-item * {
+    margin-top: 0px;
+}
+.project-item p {
+    margin-top: -20px;
+    width: 100%;
+}
+.project-item h3 {
+    width: 100%;
+    font-size: 25px;
+}
+
+#scroll-hint {
+    opacity: 0.7;
+    color: rgb(255, 255, 255);
+    width: 100%;
+    text-align: center;
+    transition: 0.2s;
+}
+
+#header-bar {
+    opacity: 0;
+    background-color: rgba(24, 31, 41, 0.3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    width: 100%;
+    padding-left: 40px;
+}
