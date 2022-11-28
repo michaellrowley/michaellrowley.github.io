@@ -4,6 +4,11 @@
         <link rel="stylesheet" href="./index.css">
     </head>
     <body>
+        <!--
+            Highlight the first three emphasised texts ('em' tag contents).
+            (You can highlight multiple sections at the same time
+            by using CTRL/CMD whilst selecting on most browsers)
+        -->
         <div id="header-bar">
             <h3>MICHAEL ROWLEY</h3>
         </div>
@@ -49,12 +54,12 @@
                 </h3>
                 <h4 style="text-align: center;margin-top: -10px;font-family: MontserratMedium;">
                     <i>
-                    - private vulnerability disclosure programme manager at a company with over 450m users.
+                    - The private vulnerability disclosure programme manager of a platform with over 450m users.
                     </i>
                 </h3>
                 <p style="font-family: MontserratMedium;">
                     Over the last three years, I have been discovering and disclosing security vulnerabilities
-                    in a combination of open/closed-source code - these vulnerabilities have ranged from
+                    in a combination of open/closed-source software - these vulnerabilities have ranged from
                     <a href="https://huntr.dev/bounties/d4db0a12-184a-429b-8f76-a3cf8ae07dc3/">out-of-bound
                     reads in a Windows driver</a> to race conditions in support software, to a combination of
                     MFA and primary authentication bypasses in a cryptocurrency platform's login page (the
@@ -73,7 +78,16 @@
                     some of which have been released as open-source software:
                 </p>
                 <div id="projects-box">
-                    <div class="project-item">
+                    <div class="project-item" onclick="window.open('https://github.com/michaellrowley/T2-lib', '_blank');">
+                        <h3>T2-Lib</h3>
+                        <p>
+                            A performant, secure <em>C++ library</em> which leverages the <em>boost.asio</em> framework
+                            to deliver an object-oriented networking model that can easily be used by
+                            other programs. This project was written in <em>C++ (17/20)</em> and is actively being used
+                            in another personal project.
+                        </p>
+                    </div>
+                    <div class="project-item" onclick="window.open('https://github.com/michaellrowley/AQArm', '_blank');">
                         <h3>AQArm</h3>
                         <p>
                             A simplistic UI-driven interpreter of a limited <em>ARM</em> subset.
@@ -81,7 +95,7 @@
                             modularity in mind, making additions to the instruction-set much simpler.
                         </p>
                     </div>
-                    <div class="project-item">
+                    <div class="project-item" onclick="window.open('https://github.com/michaellrowley/SiteMon', '_blank');">
                         <h3>SiteMon</h3>
                         <p>
                             A Windows tool for monitoring websites for source-level changes
@@ -91,15 +105,18 @@
                         </p>
                     </div>
                     <div class="project-item">
-                        <h3>Error obfuscator</h3>
+                        <h3>Antivirus Project</h3>
                         <p>
-                            A tool for obfuscating the hardcoded values of enumerations whilst
-                            maintaining certain aspects (i.e, positive/negative evaluations which
-                            are commonly used in conditional statements, etc.). Written in <em>C++</em> as a
-                            console application.
+                            A <em>kernel-mode</em> antivirus driver which interacts with a user-interface to
+                            detect malicious processes at runtime using heuristic and static detection
+                            functionality. The driver was written in <em>C</em> using the <em>Kernel-Mode Driver Framework (KMDF)</em>
+                            and the user-interface was written in <em>C++</em> using the <em>Qt Framework</em>.
+                        </br>
+                            The source code for this project has not been released publicly yet but may be
+                            available upon request in specific circumstances (send me an email).
                         </p>
                     </div>
-                    <div class="project-item">
+                    <div class="project-item" onclick="window.open('https://github.com/michaellrowley/png-cmd', '_blank');">
                         <h3>PNG-CMD</h3>
                         <p>
                             A command-line application that allows users to explore the internals
@@ -107,7 +124,7 @@
                             thoroughly tested using fuzzing (<em>AFL-Fuzz</em>) and a code assurance platform (<em>Codacy</em>).
                         </p>
                     </div>
-                    <div class="project-item">
+                    <div class="project-item" onclick="window.open('https://github.com/michaellrowley/PE-imports', '_blank');">
                         <h3>PE-Imports</h3>
                         <p>
                             A <em>Python</em> script that enumerates over files or directories, printing the imports
@@ -118,19 +135,23 @@
                             'interesting', might range from <em>ExAllocatePool</em> to <em>DbgPrintEx</em>).
                         </p>
                     </div>
-                    <div class="project-item">
-                        <h3>T2-Lib</h3>
-                        <p>
-                            A performant, secure <em>C++ library</em> which leverages the <em>boost.asio</em> framework
-                            to deliver an object-oriented networking model that can easily be used by
-                            other programs. This project was written in <em>C++ (17/20)</em> and is actively being used
-                            in another personal project.
-                        </p>
-                    </div>
-                </div>
                 </div>
             </div>
         </div>
-        <script src="https://www.michaelrowley.dev/index.js"></script>
+        <div id="personal-overlay">
+            <div id="personal-keybox">
+            <center>
+                <input type="password" placeholder="Key:" id="key-input"/>
+                </br>
+                </br>
+                <input type="text" placeholder="Data ID:" id="id-input"/>
+                </br>
+                </br>
+                <input type="button" value="Open" id="open-button"/>
+            </center>
+            </div>
+            <div id="personal-contents"></div>
+        </div>
+        <script src="index.js"></script>
     </body>
 </html>

@@ -103,7 +103,6 @@ h2, em {
     opacity: 0;
     transition: 0.4s;
     width: 70%;
-    min-width: 600px;
     margin: 0 auto;
 }
 
@@ -131,6 +130,9 @@ h2, em {
     p {
         font-size: 25px;
     }
+    #footer {
+        visibility: hidden;
+    }
 }
 
 #header-links p a {
@@ -157,13 +159,20 @@ h2, em {
 }
 
 .project-item {
+    cursor: pointer;
     border: 1px solid rgba(255, 255, 255, 0.6);
     width: 100%;
     padding: 15px 15px 0 15px;
     border-radius: 4px;
     margin-bottom: 20px;
+    transition: 0.3s;
+}
+.project-item:hover {
+    border: 1px solid rgba(0,247,255,1);
+    box-shadow: 0 0 4px rgba(0,247,255,1);
 }
 .project-item * {
+    cursor: pointer;
     margin-top: 0px;
 }
 .project-item p {
@@ -193,4 +202,60 @@ h2, em {
     backdrop-filter: blur(10px);
     width: 100%;
     padding-left: 40px;
+}
+
+#personal-overlay {
+    opacity: 0;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(24, 31, 41, 0.3);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    transition: 0.6s;
+    cursor: pointer;
+    pointer-events: none;
+}
+
+#personal-keybox, #personal-contents {
+    -webkit-transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.4);
+    transform: translate(-50%, -50%);
+    border: 2px dotted cyan;
+    padding: 30px 0 30px 0;
+    border-radius: 20px;
+    text-align: center;
+    position: absolute;
+    width: 400px;
+    left: 50%;
+    top: 50%;
+}
+
+#personal-contents {
+    padding: 0 30px 0 30px;
+    visibility: hidden;
+}
+
+#personal-keybox input {
+    width: 90%;
+}
+
+input {
+    border: none;
+    background-color: white;
+    border-radius: 3px;
+    padding: 4px 0 4px 0;
+    font-family: Montserrat;
+}
+
+input[type=button] {
+    cursor: pointer;
+    background: -webkit-linear-gradient(315deg, rgba(0,187,203,1) 0%, rgba(0,233,255,1) 50%, rgba(0,247,255,1) 100%);
+    color: rgb(56, 56, 56);
+}
+
+li, ul, ol {
+    color: white;
 }
