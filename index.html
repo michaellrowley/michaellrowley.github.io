@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta name="robots" content="noindex">
         <link rel="stylesheet" href="./index.css">
+        <title>Michael Rowley</title>
     </head>
     <body>
         <!--
@@ -25,44 +27,54 @@
         </div>
         <div id="rest-of-page">
             <div class="block">
-                <h2>Career</h2>
-                <p style="margin-top: -30px;font-family: MontserratMedium;">
-                    I have certificates in C (from
-                    a <em>Dartmouth University</em> and <em>Institut Mines-Télécom</em> initiative), and C++
-                    programming (from <em>LinkedIn Learning</em>). <a href="https://www.linkedin.com/in/michaellrowley/">(Certificates are on my LinkedIn profile.)</a>
-                </br></br>
-                    Completing virtual work experience placements at Thales and BAE Systems has given me
-                    a variety of insight into the how the technology industry operates, what skills are invaluable
-                    in certain sectors, and has also allowed me to vastly improve my teamworking and communication
-                    skills.
+                <h2>About Me</h2>
+                <p style="margin-top: -30px;font-family: MontserratMedium, Arial, Helvetica, sans-serif;">
+                    I'm a student looking to pursue a career in joint cybersecurity and software engineering endeavours
+                    in the future. With certificates in C and C++ software development from a joint <em>Dartmouth University</em>
+                    and <em>Institut Mines-Télécom</em> initiative and <em>LinkedIn Learning</em>, respectively, I am also actively
+                    looking to learn more about new and interesting technologies (and the ways that they can be broken).
                 </p>
-                <h3>
-                    "Michael has been a thorough and dedicated hacker and I enjoy receiving reports from him."
-                </h3>
-                <h4 style="text-align: center;margin-top: -10px;font-family: MontserratMedium;">
-                    <i>
-                    - The private vulnerability disclosure programme manager of a platform with over 450m users.
-                    </i>
-                </h3>
-                <p style="font-family: MontserratMedium;">
-                    Over the last three years, I have been discovering and disclosing security vulnerabilities
+                <center>
+                    <h3>
+                        "Michael has been a thorough and dedicated hacker and I enjoy receiving reports from him."
+                    </h3>
+                    <h4 style="text-align: center;margin-top: -10px;font-family: MontserratMedium, Arial, Helvetica, sans-serif;">
+                        <i>
+                        - <a href="https://www.bugcrowd.com/glossary/vulnerability-disclosure-program-vdp/">VDP</a>
+                        manager of an asset with over <em style="font-style: italic;">500,000,000 </em> users.
+                        </i>
+                    </h4>
+                </center>
+                <p style="font-family: MontserratMedium, Arial, Helvetica, sans-serif;">
+                    Over the last few years, I have discovered and disclosed a number of software security vulnerabilities
                     in a combination of open/closed-source software - these vulnerabilities have ranged from
-                    <a href="https://huntr.dev/bounties/d4db0a12-184a-429b-8f76-a3cf8ae07dc3/">out-of-bound
-                    reads in a Windows driver</a> to race conditions in support software, to a combination of
-                    MFA and primary authentication bypasses in a cryptocurrency platform's login page (the
-                    latter two were reported via invite-only programmes and therefore I cannot link any report
-                    or name the involved companies).
-                    </br>
+                    buffer overflows in a kernel-mode driver to a trivial race condition in ticketing software,
+                    to full authentication bypasses in a widely used financial platform.
+                </p>
+                <p style="font-family: MontserratMedium, Arial, Helvetica, sans-serif;">
+                    Increasingly, however, most of my focus has been towards reverse-engineering applications without the
+                    intent of discovering security flaws in them, allowing a shift towards more binary-centred research that
+                    has allowed me to develop a keen interest in reversing Windows drivers and desktop applications in general.
+                    This research was conducted with the use of tools such as <a href="https://x64dbg.com/">x64dbg</a>,
+                    <a href="https://ghidra-sre.org/">Ghidra</a>, <a href="https://hex-rays.com/ida-pro/">IDA Pro,
+                    <a href="https://rizin.re/">Rizin</a> <a href="https://cutter.re/">Cutter</a> (formerly radare2, I believe),
+                    and some attempts at using <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/debugger-download-tools">WinDbg</a>
+                    (though I was unable to get everything working smoothly in a virtual machine).
+                </p>
+                <p style="font-family: MontserratMedium, Arial, Helvetica, sans-serif;">
+                    More recently, however, I have been developing a proxy system that makes use of post-quantum cryptographic primatives
+                    (namely, <a href="https://pq-crystals.org/kyber/">'Kyber'</a> as proposed by the CRYSTALS group to a
+                    <a href="https://csrc.nist.gov/Projects/Post-Quantum-Cryptography">NIST PQC project</a>) and other interesting techniques
+                    to establish a degree of anonymity and message security over a peer-to-peer network.
                 </p>
             </div>
             <div class="block">
                 <h2>Projects</h2>
                 <p style="margin-top: -30px;font-family: MontserratMedium;">
-                    I'm extremely interested in low-level systems programming,
-                    C++, C, C#, Python, and reverse engineering.
-                </br>
-                    Facing problems in some of these areas has led to the development of numerous programs,
-                    some of which have been released as open-source software:
+                    I'm extremely interested in C++, C (especially kernel-mode programming on Windows), C#, Python, and reverse engineering projects in addition
+                    to the odd bit of web development (HTML, CSS, and JavaScript) when it seems necessary (like this website).
+                    Some of my interests have led to the development of personal projects to either solve issues or to teach me more about their fundamentals -
+                    quite a few of those projects are now open-source and are available via GitHub:
                 </p>
                 <div id="projects-box">
                     <div class="project-item" onclick="window.open('https://github.com/michaellrowley/T2-lib', '_blank');">
@@ -91,18 +103,6 @@
                             Written in <em>C#</em> using the <em>.NET framework</em> and <em>WinForms</em> for the user-interface.
                         </p>
                     </div>
-                    <div class="project-item">
-                        <h3>Antivirus Project</h3>
-                        <p>
-                            A <em>kernel-mode</em> antivirus driver which interacts with a user-interface to
-                            detect malicious processes at runtime using heuristic and static detection
-                            functionality. The driver was written in <em>C</em> using the <em>Kernel-Mode Driver Framework (KMDF)</em>
-                            and the user-interface was written in <em>C++</em> using the <em>Qt Framework</em>.
-                        </br>
-                            The source code for this project has not been released publicly yet but may be
-                            available upon request in specific circumstances (send me an email).
-                        </p>
-                    </div>
                     <div class="project-item" onclick="window.open('https://github.com/michaellrowley/png-cmd', '_blank');">
                         <h3>PNG-CMD</h3>
                         <p>
@@ -122,8 +122,30 @@
                             'interesting', might range from <em>ExAllocatePool</em> to <em>DbgPrintEx</em>).
                         </p>
                     </div>
+                    <div class="project-item">
+                        <h3>Proxy Project</h3>
+                        <p>
+                            An (<em style="background: -webkit-linear-gradient(315deg, rgb(203, 179, 0) 0%, rgb(229, 255, 0) 50%, rgb(255, 174, 0) 100%);-webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">in-development</em>) peer-to-peer application-level proxy that attempts to deliver long-term confidentiality of messages
+                            in the event of relay nodes being compromised. Written in <em>C++ (20)</em> using <em>boost</em>
+                            and <em>T2-lib</em> with a <em>C#</em> user-interface.
+                        </br>
+                            The source code for this project is not available (send me an email if you'd like a copy of it).
+                        </p>
+                    </div>
+                    <div class="project-item">
+                        <h3>Antivirus Project</h3>
+                        <p>
+                            A <em>kernel-mode</em> antivirus driver which interacts with a user-interface to
+                            detect malicious processes at runtime using heuristic and static detection
+                            functionality. The driver was written in <em>C</em> using the <em>Kernel-Mode Driver Framework (KMDF)</em>
+                            in addition to a user-interface which was written in <em>C++</em> using the <em>Qt Framework</em>.
+                        </br>
+                            The source code for this project is not available (send me an email if you'd like a copy of it).
+                        </p>
+                    </div>
                 </div>
             </div>
+            <footer><center><p style="color: rgba(255, 255, 255, 0.05)">CTRL + U</p></center></footer>
         </div>
         <div id="personal-overlay">
             <div id="personal-keybox">

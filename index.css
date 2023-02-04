@@ -42,7 +42,7 @@ body {
 
 p, a, h3, h4 {
     color: #ebebeb;
-    font-family: Montserrat;
+    font-family: Montserrat, Arial, Helvetica, sans-serif;
 }
 
 a:hover {
@@ -50,13 +50,13 @@ a:hover {
 }
 
 h1 {
-    font-family: Montserrat;
+    font-family: Montserrat, Arial, Helvetica, sans-serif;
     font-size: 70px;
     color: #ebebeb;
 }
 
 h2 {
-    font-family: Montserrat;
+    font-family: Montserrat, Arial, Helvetica, sans-serif;
     font-size: 40px;
 }
 h2, em {
@@ -134,13 +134,18 @@ h2, em {
         visibility: hidden;
     }
 }
-
+a {
+    text-decoration: underline dotted 1px grey;
+    transition-duration: 0.1s;
+}
+a:hover {
+    text-decoration: underline dotted white;
+}
 #header-links p a {
     opacity: 0.8;
     transition: 0.2s;
     color: rgba(0,247,255,1);
     margin-left: 30px;
-    text-decoration: underline dotted 2px;
 }
 #header-links p a:hover {
     color: white;
@@ -161,9 +166,9 @@ h2, em {
 .project-item {
     cursor: pointer;
     border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 3px;
     width: 100%;
     padding: 15px 15px 0 15px;
-    border-radius: 4px;
     margin-bottom: 20px;
     transition: 0.3s;
 }
@@ -247,7 +252,7 @@ input {
     background-color: white;
     border-radius: 3px;
     padding: 4px 0 4px 0;
-    font-family: Montserrat;
+    font-family: Montserrat, Arial, Helvetica, sans-serif;
 }
 
 input[type=button] {
