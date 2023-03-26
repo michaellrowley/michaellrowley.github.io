@@ -44,16 +44,27 @@ document.addEventListener("scroll", () => {
         else {
             restOfPage.style.opacity = "0";
             restOfPage.style.pointerEvents = "none";
-            clearInterval(typeTick.intervalID);
-            typeTick.intervalID = undefined;
+            const intervalID = typeTick.intervalID;
+            if (intervalID !== 0 && typeTick.intervalID !== undefined) {
+                typeTick.intervalID = undefined;
+                clearInterval(intervalID);
+            }
         }
     }
-    const reachedBottom = document.getElementById("rest-of-page").getBoundingClientRect().bottom < screen.height / 2;
-    if (reachedBottom && this.prevScroll < this.scrollY) {
-        window.scrollTo(0, document.getElementById("rest-of-page").getBoundingClientRect().height);
-    }
-    this.prevScroll = this.scrollY;
 });
+
+document.addEventListener("wheel", (event) => {
+    const reachedBottom = document.getElementById("rest-of-page").getBoundingClientRect().bottom < screen.height / 2;
+    if (reachedBottom && event.deltaY > 0) {
+        event.preventDefault();
+    }
+}, {passive: false});
+document.addEventListener("keydown", (event) => {
+    const reachedBottom = document.getElementById("rest-of-page").getBoundingClientRect().bottom < screen.height / 2;
+    if ((event.key === "ArrowDown" && reachedBottom) || event.key === " ") {
+        event.preventDefault();
+    }
+}, {passive: false});
 
 let helloElement = document.getElementById("hello-element");
 function typeTick() {
