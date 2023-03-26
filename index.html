@@ -19,7 +19,7 @@
     </head>
     <body>
         <div id="header-bar">
-            <h3>MICHAEL ROWLEY</h3>
+            <h3 style="font-size: 15pt;">MICHAEL ROWLEY</h3>
         </div>
         <div id="header-block">
             <h1>Michael Rowley</h1>
@@ -27,64 +27,32 @@
             </br>
             <div id="header-links">
                 <p>
-                    <a href="https://www.linkedin.com/in/michaellrowley/">LinkedIn</a><a href="mailto:michaellrowley@protonmail.com">Email</a><a href="https://github.com/michaellrowley/">GitHub</a>
+                    <a href="https://www.linkedin.com/in/michaellrowley/">LinkedIn</a>
+                    <a href="https://github.com/michaellrowley/">GitHub</a>
                 </p>
             </div>
             <p id="scroll-hint">(scroll down)</p>
         </div>
         <div id="rest-of-page">
             <div class="block">
-                <h2>About Me</h2>
-                <p style="margin-top: -30px;font-family: MontserratMedium, Arial, Helvetica, sans-serif;">
+                <h2 id="hello-element" style="text-align: center;text-shadow: 0px 0px 10px rgba(0, 187, 203, 0.5);height: 50px;">Hello!</h2>
+                <p style="text-align: center;margin-top: -30px;font-family: MontserratMedium, Arial, Helvetica, sans-serif;">
                     I'm a student looking to pursue a career in joint cybersecurity and software engineering endeavours
                     in the future. With certificates in C and C++ software development from a joint <em>Dartmouth University</em>
-                    and <em>Institut Mines-Télécom</em> initiative and <em>LinkedIn Learning</em>, respectively, I am also actively
+                    and <em>Institut Mines-Telecom</em> initiative and <em>LinkedIn Learning</em>, respectively, I am also actively
                     looking to learn more about new and interesting technologies (and the ways that they can be broken).
-                </p>
-                <center>
-                    <h3>
-                        "Michael has been a thorough and dedicated hacker and I enjoy receiving reports from him."
-                    </h3>
-                    <h4 style="text-align: center;margin-top: -10px;font-family: MontserratMedium, Arial, Helvetica, sans-serif;">
-                        <i>
-                        - <a href="https://www.bugcrowd.com/glossary/vulnerability-disclosure-program-vdp/">VDP</a>
-                        manager of an asset with over <em style="font-style: italic;">500,000,000 </em> users.
-                        </i>
-                    </h4>
-                </center>
-                <p style="font-family: MontserratMedium, Arial, Helvetica, sans-serif;">
-                    Over the last few years, I have discovered and disclosed a number of software security vulnerabilities
-                    in a combination of open/closed-source software - these vulnerabilities have ranged from
-                    buffer overflows in a kernel-mode driver to a trivial race condition in ticketing software,
-                    to full authentication bypasses in a widely used financial platform.
-                </p>
-                <p style="font-family: MontserratMedium, Arial, Helvetica, sans-serif;">
-                    Increasingly, however, most of my focus has been towards reverse-engineering applications without the
-                    intent of discovering security flaws in them, allowing a shift towards more binary-centred research that
-                    has allowed me to develop a keen interest in reversing Windows drivers and desktop applications in general.
-                    This research was conducted with the use of tools such as <a href="https://x64dbg.com/">x64dbg</a>,
-                    <a href="https://ghidra-sre.org/">Ghidra</a>, <a href="https://hex-rays.com/ida-pro/">IDA Pro,
-                    <a href="https://rizin.re/">Rizin</a> <a href="https://cutter.re/">Cutter</a> (formerly radare2, I believe),
-                    and some attempts at using <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/debugger-download-tools">WinDbg</a>
-                    (though I was unable to get everything working smoothly in a virtual machine).
-                </p>
-                <p style="font-family: MontserratMedium, Arial, Helvetica, sans-serif;">
-                    More recently, however, I have been developing a proxy system that makes use of post-quantum cryptographic primatives
-                    (namely, <a href="https://pq-crystals.org/kyber/">'Kyber'</a> as proposed by the CRYSTALS group to a
-                    <a href="https://csrc.nist.gov/Projects/Post-Quantum-Cryptography">NIST PQC project</a>) and other interesting techniques
-                    to establish a degree of anonymity and message security over a peer-to-peer network.
                 </p>
             </div>
             <div class="block">
                 <h2>Projects</h2>
-                <p style="margin-top: -30px;font-family: MontserratMedium;">
+                <p style="margin-top: -30px;font-family: MontserratMedium, Arial, Helvetica, sans-serif;">
                     I'm extremely interested in C++, C (especially kernel-mode programming on Windows), C#, Python, and reverse engineering projects in addition
                     to the odd bit of web development (HTML, CSS, and JavaScript) when it seems necessary (like this website).
                     Some of my interests have led to the development of personal projects to either solve issues or to teach me more about their fundamentals -
                     quite a few of those projects are now open-source and are available via GitHub:
                 </p>
                 <div id="projects-box">
-                    <div class="project-item" onclick="window.open('https://github.com/michaellrowley/T2-lib', '_blank');">
+                    <div class="project-item" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Bali_Khila_Rajgad_Maharashtra.jpg/2880px-Bali_Khila_Rajgad_Maharashtra.jpg');background-size:cover;" onclick="window.open('https://github.com/michaellrowley/T2-lib', '_blank');">
                         <h3>T2-Lib</h3>
                         <p>
                             A performant, secure <em>C++ library</em> which leverages the <em>boost.asio</em> framework
@@ -93,7 +61,7 @@
                             in another personal project.
                         </p>
                     </div>
-                    <div class="project-item" onclick="window.open('https://github.com/michaellrowley/AQArm', '_blank');">
+                    <div class="project-item" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://upload.wikimedia.org/wikipedia/commons/0/0e/Salar_de_Atacama.jpg');background-size:cover;" onclick="window.open('https://github.com/michaellrowley/AQArm', '_blank');">
                         <h3>AQArm</h3>
                         <p>
                             A simplistic UI-driven interpreter of a limited <em>ARM</em> subset.
@@ -101,7 +69,7 @@
                             modularity in mind, making additions to the instruction-set much simpler.
                         </p>
                     </div>
-                    <div class="project-item" onclick="window.open('https://github.com/michaellrowley/SiteMon', '_blank');">
+                    <div class="project-item" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Aerial_View_-_Landschaft_Markgr%C3%A4flerland1.jpg/2560px-Aerial_View_-_Landschaft_Markgr%C3%A4flerland1.jpg');background-size:cover;" onclick="window.open('https://github.com/michaellrowley/SiteMon', '_blank');">
                         <h3>SiteMon</h3>
                         <p>
                             A Windows tool for monitoring websites for source-level changes
@@ -110,7 +78,7 @@
                             Written in <em>C#</em> using the <em>.NET framework</em> and <em>WinForms</em> for the user-interface.
                         </p>
                     </div>
-                    <div class="project-item" onclick="window.open('https://github.com/michaellrowley/png-cmd', '_blank');">
+                    <div class="project-item" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://upload.wikimedia.org/wikipedia/commons/5/5c/Perito_Moreno_Glacier_Patagonia_Argentina_Luca_Galuzzi_2005.JPG');background-size:cover;" onclick="window.open('https://github.com/michaellrowley/png-cmd', '_blank');">
                         <h3>PNG-CMD</h3>
                         <p>
                             A command-line application that allows users to explore the internals
@@ -118,36 +86,29 @@
                             thoroughly tested using fuzzing (<em>AFL-Fuzz</em>) and a code assurance platform (<em>Codacy</em>).
                         </p>
                     </div>
-                    <div class="project-item" onclick="window.open('https://github.com/michaellrowley/PE-imports', '_blank');">
+                    <div class="project-item" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://upload.wikimedia.org/wikipedia/commons/e/e5/G%C3%B6reme_Valley_in_Cappadocia_edit1.jpg');background-size:cover;" onclick="window.open('https://github.com/michaellrowley/PE-imports', '_blank');">
                         <h3>PE-Imports</h3>
                         <p>
                             A <em>Python</em> script that enumerates over files or directories, printing the imports
-                            of all executables that it finds. This script is currently configured to only search
-                            for Windows drivers (using a <em>glob</em> query) but can easily be modified. A good
-                            use-case for this script is to have a large directory of interesting drivers which the
-                            script would then scan for interesting API imports (which depending on your classification of
-                            'interesting', might range from <em>ExAllocatePool</em> to <em>DbgPrintEx</em>).
+                            of all executables that it finds. A good use-case for this script is to have a large
+                            directory of drivers which the script would then scan for interesting API imports
+                            (might range from <em>ExAllocatePool</em> to <em>DbgPrintEx</em>).
                         </p>
                     </div>
-                    <div class="project-item">
+                    <div class="project-item unavailable-project-item" onclick="alert('This project is currently unavailable.');">
                         <h3>Proxy Project</h3>
                         <p>
-                            An (<em style="background: -webkit-linear-gradient(315deg, rgb(203, 179, 0) 0%, rgb(229, 255, 0) 50%, rgb(255, 174, 0) 100%);-webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">in-development</em>) peer-to-peer application-level proxy that attempts to deliver long-term confidentiality of messages
-                            in the event of relay nodes being compromised. Written in <em>C++ (20)</em> using <em>boost</em>
-                            and <em>T2-lib</em> with a <em>C#</em> user-interface.
-                        </br>
-                            The source code for this project is not available (send me an email if you'd like a copy of it).
+                            A peer-to-peer proxy that uses post-quantum cryptography to secure data.
+                            Written in <em>C++ (20)</em> using <em>boost</em> and <em>T2-lib</em> with a <em>C#</em> user-interface.
                         </p>
                     </div>
-                    <div class="project-item">
+                    <div class="project-item unavailable-project-item" onclick="alert('This project is currently unavailable.');">
                         <h3>Antivirus Project</h3>
                         <p>
                             A <em>kernel-mode</em> antivirus driver which interacts with a user-interface to
                             detect malicious processes at runtime using heuristic and static detection
                             functionality. The driver was written in <em>C</em> using the <em>Kernel-Mode Driver Framework (KMDF)</em>
                             in addition to a user-interface which was written in <em>C++</em> using the <em>Qt Framework</em>.
-                        </br>
-                            The source code for this project is not available (send me an email if you'd like a copy of it).
                         </p>
                     </div>
                 </div>

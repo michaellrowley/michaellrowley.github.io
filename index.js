@@ -1,28 +1,34 @@
-function hexToArray(data) {
-    let arr = new Uint8Array(data.length / 2);
-    for (let i = 0; i < data.length; i += 2)
-        arr[i / 2] = parseInt(data.substr(i, 2), 16);
-    return arr;
-}
-
 var usedScroll = false;
 window.setTimeout(() => {
     if (!usedScroll) {
-        window.scrollBy({left: 0, top: 100, behaviour: "smooth"});
-        usedScroll = false;
+        showMainContents();
     }
 }, 3000);
 
-window.setTimeout(() => {
-    if (usedScroll) {
-        window.scrollTo(0, 0);
+function showMainContents() {
+    headerBlock.style.opacity = "1";
+    headerBlock.style.pointerEvents = "auto";
+    headerBar.style.opacity = "0";
+    headerBar.style.pointerEvents = "none";
+    scrollHint.style.opacity = "0";
+    scrollHint.style.pointerEvents = "none";
+    restOfPage.style.opacity = "1";
+    restOfPage.style.pointerEvents = "auto";
+    if (typeTick.intervalID === undefined) {
+        typeTick.intervalID = 0;
+        setTimeout(() => {
+            typeTick.intervalID = setInterval(typeTick, 150);
+        }, 500);
     }
-}, 300);
+}
 
 const scrollHint = document.getElementById("scroll-hint");
 const restOfPage = document.getElementById("rest-of-page");
 const headerBlock = document.getElementById("header-block");
 const headerBar = document.getElementById("header-bar");
+if (headerBlock.getBoundingClientRect().top < headerBar.getBoundingClientRect().bottom) {
+    showMainContents();
+}
 document.addEventListener("scroll", () => {
     usedScroll = true;
     if (headerBlock.getBoundingClientRect().top <= 20) {
@@ -32,19 +38,66 @@ document.addEventListener("scroll", () => {
         headerBar.style.pointerEvents = "auto";
     }
     else {
-        if (headerBlock.getBoundingClientRect().top !== 200 && usedScroll) {
-            headerBlock.style.opacity = "1";
-            headerBlock.style.pointerEvents = "auto";
-            headerBar.style.opacity = "0";
-            headerBar.style.pointerEvents = "none";
-            scrollHint.style.opacity = "0";
-            scrollHint.style.pointerEvents = "none";
-            restOfPage.style.opacity = "1";
-            restOfPage.style.pointerEvents = "auto";
+        if (headerBlock.getBoundingClientRect().top !== 200) {
+            showMainContents();
         }
         else {
             restOfPage.style.opacity = "0";
             restOfPage.style.pointerEvents = "none";
+            clearInterval(typeTick.intervalID);
+            typeTick.intervalID = undefined;
         }
-    }   
+    }
+    const reachedBottom = document.getElementById("rest-of-page").getBoundingClientRect().bottom < screen.height / 2;
+    if (reachedBottom && this.prevScroll < this.scrollY) {
+        window.scrollTo(0, document.getElementById("rest-of-page").getBoundingClientRect().height);
+    }
+    this.prevScroll = this.scrollY;
 });
+
+let helloElement = document.getElementById("hello-element");
+function typeTick() {
+    const languageDefs = [
+        "Hello!",
+        // "こんにちは!",
+        "Bonjour!",
+        // "你好!",
+        "Hoi!",
+        // "नमस्ते!",
+        "Halo!",
+        "Avuxeni!",
+        "Saluton!",
+        "Salve!"
+        // "Halló!"
+    ];
+    if (typeTick.mode == undefined) {
+        typeTick.mode = {
+            method: "bsp",
+            language: 0,
+            tick: 0
+        };
+    }
+
+    if (typeTick.mode.method === "bsp") {
+        const finalLength = languageDefs[typeTick.mode.language].length - typeTick.mode.tick++;
+        helloElement.innerHTML = finalLength == 0 ? " " : helloElement.innerHTML.substring(0, finalLength);
+        if (finalLength === 0) {
+            typeTick.mode.method = "typ";
+            typeTick.mode.language = (typeTick.mode.language + 1) % languageDefs.length;
+            typeTick.mode.tick = 0;
+        }
+    }
+    else {
+        const nextChar = languageDefs[typeTick.mode.language][typeTick.mode.tick++];
+        helloElement.innerHTML += nextChar;
+        if (typeTick.mode.tick == languageDefs[typeTick.mode.language].length) {
+            typeTick.mode.method = "bsp";
+            typeTick.mode.language = (typeTick.mode.language + 1) % languageDefs.length;
+            typeTick.mode.tick = 0;
+            clearInterval(typeTick.intervalID);
+            setTimeout(() => {
+                typeTick.intervalID = setInterval(typeTick, 150);
+            }, 2000);
+        }
+    }
+}

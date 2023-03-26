@@ -20,6 +20,7 @@ body {
     background-color: rgb(24, 31, 41);
     margin-left: 50px;
     animation: 0.8s fadein;
+    height: 20000px;
 }
 
 @keyframes fadein {
@@ -45,26 +46,40 @@ p, a, h3, h4 {
     font-family: Montserrat, Arial, Helvetica, sans-serif;
 }
 
+p {
+    font-size: 20pt;
+}
+h3 {
+    font-size: 25pt;
+}
+
 a:hover {
     cursor: pointer;
 }
 
 h1 {
     font-family: Montserrat, Arial, Helvetica, sans-serif;
-    font-size: 70px;
+    font-size: 50pt;
     color: #ebebeb;
 }
 
 h2 {
     font-family: Montserrat, Arial, Helvetica, sans-serif;
-    font-size: 40px;
+    font-size: 30pt;
 }
+
 h2, em {
     font-style: normal;
     background: -webkit-linear-gradient(315deg, rgba(0,187,203,1) 0%, rgba(0,233,255,1) 50%, rgba(0,247,255,1) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+#header-block {
+    margin-top: 200px;
+    animation: 0.5s titledropin;
+    transition: 0.3s;
 }
 
 #header-block h2 {
@@ -78,12 +93,6 @@ h2, em {
 
 .hover-opacity:hover {
     opacity: 100%;
-}
-
-#header-block {
-    margin-top: 200px;
-    animation: 0.5s titledropin;
-    transition: 0.3s;
 }
 
 @media screen and (min-width: 1350px) {
@@ -122,13 +131,16 @@ h2, em {
         width: 100%;
     }
     #scroll-hint, #header-bar {
-        visibility: hidden;
+        opacity: 0;
+        pointer-events: none;
+    }
+    #header-block {
+        opacity: 1;
+        pointer-events: auto;
     }
     #rest-of-page {
         opacity: 1;
-    }
-    p {
-        font-size: 25px;
+        pointer-events: auto;
     }
     #footer {
         visibility: hidden;
@@ -166,7 +178,7 @@ a:hover {
 .project-item {
     cursor: pointer;
     border: 1px solid rgba(255, 255, 255, 0.6);
-    border-radius: 3px;
+    border-radius: 5px;
     width: 100%;
     padding: 15px 15px 0 15px;
     margin-bottom: 20px;
@@ -175,6 +187,10 @@ a:hover {
 .project-item:hover {
     border: 1px solid rgba(0,247,255,1);
     box-shadow: 0 0 4px rgba(0,247,255,1);
+}
+.unavailable-project-item:hover {
+    border: 1px solid white;
+    box-shadow: 0 0 4px white;
 }
 .project-item * {
     cursor: pointer;
@@ -186,7 +202,7 @@ a:hover {
 }
 .project-item h3 {
     width: 100%;
-    font-size: 25px;
+    font-size: 25pt;
 }
 
 .file-item:hover {
@@ -212,7 +228,32 @@ a:hover {
     backdrop-filter: blur(10px);
     width: 100%;
     padding-left: 40px;
-    box-shadow: 0 4px 6px 0px rgba(0,247,255, 0.6);
+    display: flex;
+}
+
+.scrollable {
+    display: inline-flex;
+    overflow: scroll;
+    transform: translateY(30%);
+}
+
+.scrollable button {
+    padding: 3px 12px 3px 12px;
+    height: fit-content;
+    margin-left: 25px;
+    background: transparent;
+    border: 1px solid white;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: 0.3s;
+    font-size: 20px;
+}
+.scrollable button:hover {
+    opacity: 1;
+    color: rgb(24, 31, 41);
+    background-color: #efefef;
 }
 
 #personal-overlay {
@@ -222,10 +263,10 @@ a:hover {
     height: 100%;
     top: 0;
     left: 0;
-    background-color: rgba(24, 31, 41, 0.3);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    transition: 0.6s;
+    background-color: rgba(24, 31, 41, 0.5);
+    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px);
+    transition: 1s;
     cursor: pointer;
     pointer-events: none;
 }
@@ -251,23 +292,4 @@ a:hover {
 
 #personal-keybox input {
     width: 90%;
-}
-
-input {
-    text-align: center;
-    border: none;
-    background-color: white;
-    border-radius: 3px;
-    padding: 4px 0 4px 0;
-    font-family: Montserrat, Arial, Helvetica, sans-serif;
-}
-
-input[type=button] {
-    cursor: pointer;
-    background: -webkit-linear-gradient(315deg, rgba(0,187,203,1) 0%, rgba(0,233,255,1) 50%, rgba(0,247,255,1) 100%);
-    color: rgb(56, 56, 56);
-}
-
-li, ul, ol {
-    color: white;
 }
