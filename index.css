@@ -1,11 +1,11 @@
 @font-face {
-    font-family: Montserrat;
-    src: url('./Montserrat/Montserrat-Bold.ttf');
+    font-family: Inter;
+    src: url('./Inter/Inter-Bold.ttf');
 }
 
 @font-face {
-    font-family: MontserratMedium;
-    src: url('./Montserrat/Montserrat-Medium.ttf');
+    font-family: InterMedium;
+    src: url('./Inter/Inter-Medium.ttf');
 }
 
 html {
@@ -20,7 +20,6 @@ body {
     background-color: rgb(24, 31, 41);
     margin-left: 50px;
     animation: 0.8s fadein;
-    height: 20000px;
 }
 
 @keyframes fadein {
@@ -43,7 +42,7 @@ body {
 
 p, a, h3, h4 {
     color: #ebebeb;
-    font-family: Montserrat, Arial, Helvetica, sans-serif;
+    font-family: Inter, Arial, Helvetica, sans-serif;
 }
 
 p {
@@ -58,13 +57,13 @@ a:hover {
 }
 
 h1 {
-    font-family: Montserrat, Arial, Helvetica, sans-serif;
+    font-family: Inter, Arial, Helvetica, sans-serif;
     font-size: 50pt;
     color: #ebebeb;
 }
 
 h2 {
-    font-family: Montserrat, Arial, Helvetica, sans-serif;
+    font-family: Inter, Arial, Helvetica, sans-serif;
     font-size: 30pt;
 }
 
@@ -109,13 +108,15 @@ h2, em {
 }
 
 #rest-of-page {
-    opacity: 0;
     transition: 0.4s;
     width: 70%;
     margin: 0 auto;
 }
 
 @media screen and (max-width: 1349px) {
+    body {
+        margin-left: 0;
+    }
     #header-block h1 {
         text-align: center;
     }
@@ -145,7 +146,11 @@ h2, em {
     #footer {
         visibility: hidden;
     }
+    .bigscreen-only, .project-item p {
+        display: none;
+    }
 }
+
 a {
     text-decoration: underline dotted 1px grey;
     transition-duration: 0.1s;
@@ -199,6 +204,7 @@ a:hover {
 .project-item p {
     margin-top: -20px;
     width: 100%;
+    font-size: 15pt;
 }
 .project-item h3 {
     width: 100%;
