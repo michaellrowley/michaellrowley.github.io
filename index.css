@@ -8,6 +8,11 @@
     src: url('./Inter/Inter-Medium.ttf');
 }
 
+@font-face {
+    font-family: Pacifico;
+    src: url('./Pacifico/Pacifico-Regular.ttf');
+}
+
 html {
     scroll-behavior: smooth;
 }
@@ -33,10 +38,10 @@ body {
 
 @keyframes titledropin {
     from {
-        margin-top: 275px;
+        margin-top: 100px;
     }
     to {
-        margin-top: 200px;
+        margin-top: 80px;
     }
 }
 
@@ -57,14 +62,15 @@ a:hover {
 }
 
 h1 {
-    font-family: Inter, Arial, Helvetica, sans-serif;
+    font-family: Pacifico, Arial, Helvetica, sans-serif;
     font-size: 50pt;
     color: #ebebeb;
+    z-index: 1;
 }
 
 h2 {
     font-family: Inter, Arial, Helvetica, sans-serif;
-    font-size: 30pt;
+    font-size: 30px;
 }
 
 h2, em {
@@ -76,7 +82,7 @@ h2, em {
 }
 
 #header-block {
-    margin-top: 200px;
+    margin-top: 80px;
     animation: 0.5s titledropin;
     transition: 0.3s;
 }
@@ -94,45 +100,52 @@ h2, em {
     opacity: 100%;
 }
 
-@media screen and (min-width: 1350px) {
-    #header-block h1, #header-block h2 {
-        display: inline-block;
-    }
-}
-
-
-#header-links {
-    font-size: 20px;
-    margin-top: -70px;
-    margin-left: -25px;
-}
-
 #rest-of-page {
     transition: 0.4s;
     width: 70%;
     margin: 0 auto;
 }
 
-@media screen and (max-width: 1349px) {
+@media screen and (min-width: 1400px) {
+
+    #header-block h1, #header-block h2 {
+        display: inline-block;
+    }
+
+    .smallscreen-only {
+        display: none;
+    }
+    .project-item {
+        margin-bottom: 20px;
+    }
+}
+
+@media screen and (max-width: 1399px) {
+    #projects-box {
+        display: flex;
+        overflow-x: scroll;
+    }
+    .project-item {
+        margin-right: 20px;
+    }
     body {
         margin-left: 0;
     }
     #header-block h1 {
         text-align: center;
+        line-height: 80px;
     }
     #header-block h2 {
+        margin-left: 0;
         margin-top: -50px;
         text-align: center;
         font-size: 30px;
     }
     #header-links {
         font-size: 15px;
-        margin-top: -50px;
-        text-align: center;
-        width: 100%;
     }
     #scroll-hint, #header-bar {
-        opacity: 0;
+        opacity: 1;
         pointer-events: none;
     }
     #header-block {
@@ -163,7 +176,14 @@ a:hover {
     transition: 0.2s;
     color: rgba(0,247,255,1);
     margin-left: 30px;
+    font-size: 20px;
+    font-family: Inter;
 }
+#header-links p {
+    margin: 0px;
+    padding: 10px 0 10px 0;
+}
+
 #header-links p a:hover {
     color: white;
     opacity: 1;
@@ -186,7 +206,6 @@ a:hover {
     border-radius: 5px;
     width: 100%;
     padding: 15px 15px 0 15px;
-    margin-bottom: 20px;
     transition: 0.3s;
 }
 .project-item:hover {
@@ -225,7 +244,7 @@ a:hover {
 }
 
 #header-bar {
-    opacity: 0;
+    opacity: 1;
     background-color: rgba(24, 31, 41, 0.3);
     position: fixed;
     top: 0;
@@ -235,6 +254,7 @@ a:hover {
     width: 100%;
     padding-left: 40px;
     display: flex;
+    z-index: 2;
 }
 
 .scrollable {
