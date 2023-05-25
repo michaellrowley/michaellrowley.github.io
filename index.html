@@ -2,16 +2,10 @@
 <html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Google Tag (start of 'gtag.js') -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HLG1SDB3SL"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-HLG1SDB3SL');
+        !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+        posthog.init('phc_bHo8WWfoppBenQZiaZg6ECJiyD9VbktIKmtKw9oeDZq',{api_host:'https://eu.posthog.com'})
     </script>
-    <!-- Google Tag (end of 'gtag.js') -->
 
     <head>
         <meta name="robots" content="noindex">
@@ -37,14 +31,14 @@
         </div>
         <div id="rest-of-page">
             <div class="block">
-                <h2 style="text-align: center;height: 50px;">Hello!</h2>
-                <p style="text-align: center;margin-top: -30px;font-size: 17pt;font-family: Inter, Arial, Helvetica, sans-serif;">
+                <h2 style="height: 50px;">About Me</h2>
+                <p style="margin-top: -30px;font-size: 17pt;font-family: Inter, Arial, Helvetica, sans-serif;">
                     I'm pursuing a career in joint <span class="bigscreen-only">cybersecurity</span>
-                    <em class="smallscreen-only">cybersecurity</em> and <em class="smallscreen-only">software engineering</em> endeavours.
+                    <em class="smallscreen-only">cybersecurity</em> and <em class="smallscreen-only">software engineering</em> endeavours -
                     <span class="bigscreen-only">
-                        With certificates in C and C++ software development from a joint <em>Dartmouth University</em>
-                        and <em>Institut Mines-Telecom</em> initiative and <em>LinkedIn Learning</em>, respectively,
-                        I am also actively looking to learn more about new and interesting technologies/techniques.
+                        and with certificates in C and C++ software development from <em>Dartmouth University</em>,
+                        <em>Institut Mines-Telecom</em>, and <em>LinkedIn Learning</em>,
+                        I am always looking to learn about new and interesting technology!
                     </span>
                 </p>
             </div>
@@ -54,14 +48,16 @@
                     Some of my interests have been resulted in code being released as open-source projects via GitHub:
                 </p>
                 <div id="projects-box">
-                    <div class="project-item" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://i.ibb.co/TgkXNq5/Ocean-water-1-2.jpg');background-size:cover;" onclick="window.open('https://github.com/michaellrowley/dll-sideloading', '_blank');">
+                    <!--<div class="project-item" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://i.ibb.co/TgkXNq5/Ocean-water-1-2.jpg');background-size:cover;" onclick="window.open('https://github.com/michaellrowley/dll-sideloading', '_blank');">-->
+                    <div class="project-item" onclick="window.open('https://github.com/michaellrowley/dll-sideloading', '_blank');">
                         <h3>DLL Sideloading</h3>
                         <p>
                             A <em>Windows</em> tool for use in triaging and identifying DLL sideloading/hijacking vulnerabilities in running processes by
                             <em>hooking</em> relevant functions at runtime.
                         </p>
                     </div>
-                    <div class="project-item" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://i.ibb.co/mBxC7Jv/Bali-Khila-Rajgad-Maharashtra-2.jpg');background-size:cover;" onclick="window.open('https://github.com/michaellrowley/T2-lib', '_blank');">
+                    <!--<div class="project-item" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://i.ibb.co/mBxC7Jv/Bali-Khila-Rajgad-Maharashtra-2.jpg');background-size:cover;" onclick="window.open('https://github.com/michaellrowley/T2-lib', '_blank');">-->
+                    <div class="project-item" style="background-color: rgba(40, 40, 240, 0.1); border: 1.5px solid rgba(40, 40, 240, 0.6);" onclick="window.open('https://github.com/michaellrowley/T2-lib', '_blank');">
                         <h3>T2-Lib</h3>
                         <p>
                             A performant, secure <em>C++ library</em> which leverages the <em>boost.asio</em> framework
@@ -70,7 +66,8 @@
                             in another personal project.
                         </p>
                     </div>
-                    <div class="project-item" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://i.ibb.co/qMS1kLP/Salar-de-Atacama-1.jpg');background-size:cover;" onclick="window.open('https://github.com/michaellrowley/AQArm', '_blank');">
+                    <!--<div class="project-item" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://i.ibb.co/qMS1kLP/Salar-de-Atacama-1.jpg');background-size:cover;" onclick="window.open('https://github.com/michaellrowley/AQArm', '_blank');">-->
+                    <div class="project-item" style="background-color: rgba(204, 40, 40, 0.1); border: 1.5px solid rgba(204, 40, 40, 0.6);" onclick="window.open('https://github.com/michaellrowley/AQArm', '_blank');">
                         <h3>AQArm</h3>
                         <p>
                             A simplistic UI-driven interpreter of a limited <em>ARM</em> subset.
@@ -78,7 +75,8 @@
                             modularity in mind, making additions to the instruction-set extremely simple.
                         </p>
                     </div>
-                    <div class="project-item" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://i.ibb.co/DCbcCky/Aerial-View-Landschaft-Markgr-flerland1-2.jpg');background-size:cover;" onclick="window.open('https://github.com/michaellrowley/SiteMon', '_blank');">
+                    <!--<div class="project-item" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://i.ibb.co/DCbcCky/Aerial-View-Landschaft-Markgr-flerland1-2.jpg');background-size:cover;" onclick="window.open('https://github.com/michaellrowley/SiteMon', '_blank');">-->
+                    <div class="project-item" style="background-color: rgba(204, 204, 0, 0.1); border: 1.5px solid rgba(204, 204, 0, 0.6);" onclick="window.open('https://github.com/michaellrowley/SiteMon', '_blank');">
                         <h3>SiteMon</h3>
                         <p>
                             A Windows tool for monitoring websites for source-level changes
@@ -87,7 +85,8 @@
                             Written in <em>C#</em> using the <em>.NET framework</em> and <em>WinForms</em> for the user-interface.
                         </p>
                     </div>
-                    <div class="project-item" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://i.ibb.co/yB1W0QJ/Perito-Moreno-Glacier-Patagonia-Argentina-Luca-Galuzzi-2005-2.jpg');background-size:cover;" onclick="window.open('https://github.com/michaellrowley/png-cmd', '_blank');">
+                    <!--<div class="project-item" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://i.ibb.co/yB1W0QJ/Perito-Moreno-Glacier-Patagonia-Argentina-Luca-Galuzzi-2005-2.jpg');background-size:cover;" onclick="window.open('https://github.com/michaellrowley/png-cmd', '_blank');">-->
+                    <div class="project-item" style="background-color: rgba(204, 0, 204, 0.1); border: 1.5px solid rgba(204, 0, 204, 0.6);" onclick="window.open('https://github.com/michaellrowley/PNG-CMD', '_blank');">
                         <h3>PNG-CMD</h3>
                         <p>
                             A command-line application that allows users to explore the internals
@@ -95,7 +94,8 @@
                             thoroughly tested using fuzzing (<em>AFL-Fuzz</em>) and a code assurance platform (<em>Codacy</em>).
                         </p>
                     </div>
-                    <div class="project-item" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://i.ibb.co/smmVSLk/G-reme-Valley-in-Cappadocia-edit1-2.jpg');background-size:cover;" onclick="window.open('https://github.com/michaellrowley/PE-imports', '_blank');">
+                    <!--<div class="project-item" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://i.ibb.co/smmVSLk/G-reme-Valley-in-Cappadocia-edit1-2.jpg');background-size:cover;" onclick="window.open('https://github.com/michaellrowley/PE-imports', '_blank');">-->
+                    <div class="project-item" style="background-color: rgba(204, 122, 20, 0.1); border: 1.5px solid rgba(204, 122, 20, 0.6);" onclick="window.open('https://github.com/michaellrowley/PE-Imports', '_blank');">
                         <h3>PE-Imports</h3>
                         <p>
                             A <em>Python</em> script that enumerates over files or directories, printing the imports
