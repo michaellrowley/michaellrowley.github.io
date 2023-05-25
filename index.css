@@ -106,64 +106,6 @@ h2, em {
     margin: 0 auto;
 }
 
-@media screen and (min-width: 1400px) {
-
-    #header-block h1, #header-block h2 {
-        display: inline-block;
-    }
-
-    .smallscreen-only {
-        display: none;
-    }
-    .project-item {
-        margin-bottom: 20px;
-    }
-}
-
-@media screen and (max-width: 1399px) {
-    #projects-box {
-        display: flex;
-        overflow-x: scroll;
-    }
-    .project-item {
-        margin-right: 20px;
-    }
-    body {
-        margin-left: 0;
-    }
-    #header-block h1 {
-        text-align: center;
-        line-height: 80px;
-    }
-    #header-block h2 {
-        margin-left: 0;
-        margin-top: -30px;
-        text-align: center;
-        font-size: 30px;
-    }
-    #header-links {
-        font-size: 15px;
-    }
-    #scroll-hint, #header-bar {
-        opacity: 1;
-        pointer-events: none;
-    }
-    #header-block {
-        opacity: 1;
-        pointer-events: auto;
-    }
-    #rest-of-page {
-        opacity: 1;
-        pointer-events: auto;
-    }
-    #footer {
-        visibility: hidden;
-    }
-    .bigscreen-only, .project-item p {
-        display: none;
-    }
-}
-
 a {
     text-decoration: underline dotted 1px grey;
     transition-duration: 0.1s;
@@ -253,7 +195,6 @@ a:hover {
     backdrop-filter: blur(10px);
     width: 100%;
     padding-left: 40px;
-    display: flex;
     z-index: 2;
 }
 
@@ -318,4 +259,67 @@ a:hover {
 
 #personal-keybox input {
     width: 90%;
+}
+
+
+@media screen and (min-width: 1400px) {
+
+    #header-block h1, #header-block h2 {
+        display: inline-block;
+    }
+
+    .smallscreen-only {
+        display: none;
+    }
+    .project-item {
+        margin-bottom: 20px;
+    }
+
+    #header-bar {
+        display: flex;
+    }
+}
+
+@media screen and (max-width: 1399px) {
+    #projects-box {
+        display: flex;
+        overflow-x: scroll;
+    }
+    .project-item {
+        margin-right: 20px;
+    }
+    body {
+        margin-left: 0;
+    }
+    #header-block h1 {
+        text-align: center;
+        line-height: 80px;
+    }
+    #header-block h2 {
+        margin-left: 0;
+        margin-top: -30px;
+        text-align: center;
+        font-size: 30px;
+    }
+    #header-links {
+        font-size: 15px;
+    }
+    #scroll-hint, #header-bar {
+        opacity: 1;
+        pointer-events: none;
+    }
+    #header-block {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    #rest-of-page {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    #footer {
+        visibility: hidden;
+    }
+    .bigscreen-only, .project-item p {
+        display: none;
+    }
 }
