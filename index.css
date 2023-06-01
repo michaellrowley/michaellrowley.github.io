@@ -278,6 +278,12 @@ a:hover {
         padding-bottom: 20px;
         padding-top: 20px;
     }
+
+    #projects-box div {
+        background-image:  linear-gradient(rgba(247, 247, 247, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(247, 247, 247, 0.1) 1px, transparent 2px), linear-gradient(rgba(247, 247, 247, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(247, 247, 247, 0.1) 1px, transparent 1px);
+        background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
+        background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+    }
 }
 
 @media screen and (max-width: 1399px) {
