@@ -4,6 +4,12 @@
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-HLG1SDB3SL"></script>
 
+    <script>
+    window.addEventListener("scroll",function() {
+        document.getElementById("header-bar").style.opacity = window.scrollY > 260 ? "1" : "0";
+    });
+    </script>
+
     <head>
         <meta name="robots" content="noindex">
         <link rel="stylesheet" href="./index.css">
@@ -42,7 +48,7 @@
             <div class="block">
                 <h2>Recent Projects</h2>
                 <p class="bigscreen-only" style="margin-top: -30px;font-size: 14pt;font-family: Inter, Arial, Helvetica, sans-serif;">
-                    Some of my interests have been resulted in code being released as open-source projects via GitHub:
+                    Some of my interests have resulted in open-source projects being released via GitHub:
                 </p>
                 <div id="projects-box">
                     <div class="project-item" onclick="window.open('https://github.com/michaellrowley/Selino', '_blank');">
