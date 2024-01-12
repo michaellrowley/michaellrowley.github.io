@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-HLG1SDB3SL"></script>
+
+        <link rel="stylesheet" href="../../blog.css"/>
+        <link rel="icon" type="image/x-icon" href="https://www.michaelrowley.dev/favicon.ico">
+        <title>SSRF</title>
+    </head>
+    <body>
+        <div id="scroll-tab">
+            <center>
+                <div id="scroll-body"></div>
+                <div id="scroll-marker" style="height: 1%;"></div>
+            </center>
+        </div>
+
+        <h1>SSRF to Bypass Firewalls</h1>
+
+        <a href="https://www.michaelrowley.dev/" class="home-tag" style="text-decoration: none; color: black;"><span class="back-arrow"></span>BACK</a>
+
+        <h2>What is SSRF?</h2>
+        <p>
+            Server-Side Request Forgery - or 'SSRF' for short - is a category of vulnerability that
+            allows a malicious actor to send network requests on behalf of a server operated by the victim.
+            The main use of this type of attack is typically to send requests to internal hosts (such as
+            <a href="https://hackingthe.cloud/aws/exploitation/ec2-metadata-ssrf/">an AWS credentials endpoint</a>)
+            that only the exploited server would be able to access.
+        </p>
+        <p>
+            Most of the time, this type of issue arises from a server being allowed to make external requests (i.e,
+            downloading an image from a URL to then store it as a profile picture) but a lack of input validation
+            causes the server to be allowed to make <i>internal</i> requests. For this reason and similarly to
+            <a href="https://learn.snyk.io/lessons/open-redirect/javascript/">'open redirect'</a> issues,
+            SSRF isn't usually classed as a vulnerability unless there is demonstrable impact facing the company
+            hosting such a server.
+        </p>
+        <p>
+            In addition to the main form of this vulnerability, <i>'blind' SSRF</i> can also be used to imply that the person exploiting the vulnerability can
+            make requests on behalf of a server but is unable to retrieve the responses (though some information
+            might be leaked via side channels such as timing discrepancies).
+        </p>
+
+        <h2>Network Analysis</h2>
+        <p>
+            Network analysis takes place via a huge range of techniques, ranging from heuristic monitoring of metadata to static
+            blacklisting/allowlisting of endpoints, protocols, incoming/outgoing ports, and patterns in raw data. A common utility
+            for implementing network protection is <a href="https://github.com/snort3/snort3"><i>Snort</i></a>,
+            an open-source intrusion prevention system. Snort supports a set of rules such as the following:
+        </p>
+        <div class="code block-code">
+            <span class="language-tag">snort</span>
+            <a style="text-decoration: none; color: white; font-size: 14px;" href="https://sublimerobots.com/2015/12/the-snort-reputation-preprocessor/">link</a>
+        <hr>
+            <code>
+                preprocessor reputation:</br>
+                &nbsp;&nbsp;&nbsp;&nbsp;memcap 500,</br>
+                &nbsp;&nbsp;&nbsp;&nbsp;priority whitelist,</br>
+                &nbsp;&nbsp;&nbsp;&nbsp;nested_ip inner,</br>
+                &nbsp;&nbsp;&nbsp;&nbsp;whitelist <code style="color: rgba(0,247,255,1);">$WHITE_LIST_PATH/white_list.rules</code>,</br>
+                &nbsp;&nbsp;&nbsp;&nbsp;blacklist <code style="color: rgba(0,247,255,1);">$BLACK_LIST_PATH/black_list.rules</code></br>
+            </code>
+        </div>
+        <p>
+            Other systems have different rule syntaxes but allow for similar functionality; flagging, blocking, or ignoring traffic based on
+            volume, destination, or signature scanning packet contents.
+        </p>
+        <h3>Bypassing Network Firewalls</h3>
+        <p>
+            For an attacker, bypassing an IP blacklist can be as trivial as renting a new set of proxies/servers,
+            meaning that unless the malicious actor has hardcoded the IP of their command-and-control (C2) server, they will likely have
+            <a href="https://www.semanticscholar.org/paper/On-cloaking-behaviors-of-malicious-websites-Samarasinghe-Mannan/db0ac084bf50550307f981c2971944f2133472c7">little issue getting around an IP blacklist</a>.
+        </br></br>
+            Heuristic network analysis is more difficult to get around as it involves the developer tweaking the way that their malware
+            communicates; this typically takes more time to work around but if an adversary can reverse engineer the model used to detect
+            network traffic (or they have access to the public ruleset responsible for it) a workaround wouldn't take too long.
+        </br></br>
+            If a network exclusively allows traffic based on a whitelist, malware authors have to find a way to route their communications
+            through a set of trusted domains or IP ranges. This might lead to the use of a <a style="cursor: pointer;"
+            onclick="if (confirm('This website throws a certificate error, continue?')) {
+                window.location = 'https://www.doiserbia.nb.rs/Article.aspx?ID=1451-48692003357R' };">social media-based C2 structure</a>
+            or the (more accessible for attackers) compromise of a DNS (i.e, exploiting the firewall's DNS cache in a rebinding attack or
+            modifying the DNS server relied upon by the firewall).
+        </p>
+        <h2>SSRF as a Malware Communication Vector</h2>
+        <p>
+            So, as you've probably guessed where this post is heading, the idea is to use SSRF to bypass blacklists and possibly to even
+            lend credibility to communications by routing all traffic destined for the C2 server through a reputable service's servers.
+            This is particularly advantageous over other methods of using reputable networks as endpoints that relay requests are likely
+            to be less actively monitored (or logged) than, say, <a href="https://zeltser.com/bots-command-and-control-via-social-media/">Twitter's post feed</a>.
+        </p>
+        <p>
+            A case study for such an issue can be observed in <a href="https://en.gravatar.com/">Gravatar</a>'s avatar retrieval endpoint, where it was noted that
+            <span class="code inline-code">https://secure.gravatar.com/avatar/<span style="opacity: 0.5;">nonexistent_identifier</span>?
+            <span style="color: rgba(0,247,255,1);">default</span>=http://images.google.com/default_avatar.png</span> redirects to
+            <span class="code inline-code">https://i1.wp.com/<span style="color: rgba(0,247,255,1);">images.google.com</span>/default_avatar.png</span>,
+            with <i style="color: rgba(0,247,255,1);">'images.google.com'</i> subsequently receiving a DNS and then HTTP(S) GET request from the backend of 'i1.wp.com'
+            (requesting 'default_avatar.png'):
+        </p>
+        <div class="flex-grid">
+            <div class="code block-code" style="border-left: none;border-bottom: 3px solid rgba(0,247,255,1);">
+                <span class="language-tag">DNS-REQUEST</span>
+                <a style="text-decoration: none; color: rgb(255, 255, 255); font-size: 14px;" href="https://app.interactsh.com/#/">link</a>
+                <div style="height: 20px; width: 20px; border-radius: 100%; text-align: center; background-color: rgba(255, 255, 255, 0.3); float: right;">1</div>
+                <hr>
+                <code>
+                    ;; opcode: QUERY, status: NOERROR, id: 50054</br>
+                    ;; flags:; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 1</br>
+
+                    ;; OPT PSEUDOSECTION:</br>
+                    ; EDNS: version 0; flags: do; udp: 1680</br>
+
+                    ;; QUESTION SECTION:</br>
+                    ;<span style="color: rgba(0,247,255,1);">images.google.com</span>.	IN	 A
+                </code>
+            </div>
+        </br>
+            <div class="code block-code" style="border-right: 3px solid rgba(0,247,255,1);">
+                <span class="language-tag">DNS-RESPONSE</span>
+                <a style="text-decoration: none; color: white; font-size: 14px;" href="https://app.interactsh.com/#/">link</a>
+                <div style="height: 20px; width: 20px; border-radius: 100%; text-align: center; background-color: rgba(255, 255, 255, 0.3); float: right;">2</div>
+                <hr>
+                <code>
+                    ;; opcode: QUERY, status: NOERROR, id: 50054</br>
+                    ;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 2, ADDITIONAL: 2</br>
+
+                    ;; QUESTION SECTION:</br>
+                    ;<span style="color: rgba(0,247,255,1);">images.google.com</span>.	IN	 A</br>
+
+                    ;; ANSWER SECTION:</br>
+                    <span style="color: rgba(0,247,255,1);">images.google.com</span>.	3600	IN	A	8.8.8.8</br>
+
+                    ;; AUTHORITY SECTION:</br>
+                    <span style="color: rgba(0,247,255,1);">images.google.com</span>.	3600	IN	NS	ns1.abc.def.</br>
+                    <span style="color: rgba(0,247,255,1);">images.google.com</span>.	3600	IN	NS	ns2.abc.def.</br>
+
+                    ;; ADDITIONAL SECTION:</br>
+                    ns1.abc.def.	3600	IN	A	8.8.8.8</br>
+                    ns2.abc.def.	3600	IN	A	8.8.8.8</br>
+                </code>
+            </div>
+        </br>
+        <div class="code block-code" style="border-left: none; border-top: 3px solid rgba(0,247,255,1);">
+                <span class="language-tag">HTTP-REQUEST</span>
+                <a style="text-decoration: none; color: white; font-size: 14px;" href="https://app.interactsh.com/#/">link</a>
+                <div style="height: 20px; width: 20px; border-radius: 100%; text-align: center; background-color: rgba(255, 255, 255, 0.3); float: right;">3</div>
+                <hr>
+                <code>
+                    GET /default_avatar.png HTTP/1.1</br>
+                    Host: images.google.com</br>
+                    Accept: image/webp,*/*</br>
+                    User-Agent: Photon/1.0</br>
+                </code>
+            </div>
+        </div>
+        <p>
+            This opens an opportunity for data to be embedded within the DNS request (the subdomain parameter being the most obvious choice) or the HTTP request/response,
+            and bidirectional signalling would be possible with either - however, setting up a system to insert data into DNS requests/responses would be tedious and there
+            is <a href="https://www.rfc-editor.org/rfc/rfc1034#section-3.1">a limit to how much data can be held in a subdomain</a> whereas there are a range of HTTP
+            parsing libraries available for most langages and it could even be possible for an attacker to stream malicious binaries from their backend serer to a victim
+            by <a href="https://djharper.dev/post/2020/12/26/executable-pngs/">embedding it inside an image</a> that the i1.wp.com
+            endpoint returns.
+        </p>
+        <p>
+            In this real-world example, we see that intentional server-side request forgery implemented by reputable companies can be
+            leveraged by attackers to evade detection and make blocking their traffic slightly harder (Gravatar from the above example is embedded in every Wordpress site
+            and is used by GitHub, Trello, Slack, Shopify, and Atlassian BitBucket) given how disallowing traffic to such an endpoint could cause collateral damage to
+            legitimate users.
+        </p>
+        <p>
+            In addition to having traffic apparently flowing to a legitimate server, there is typically less moderation on the backend requests being made by endpoints such as
+            i2.wp.com than there would be on obfuscated social media posts and by default, such endpoints don't collect the scores of data that seem to be
+            assimilated by other platforms. These factors present the use of SSRF as a far more viable long-term communication method, a factor that is
+            seemingly reinforced by how likely it is that the maintainers of such platforms tend to be unwilling to patch issues that do not directly impact
+            themselves or their customers.
+        </p>
+        <p style="opacity: 0.7; text-align: center;">
+            The example used in the case study above was reported to <a href="https://automattic.com/">Automattic</a> - the owners of Gravatar and Wordpress -
+            in March of 2021 and was decided to be an 'intended feature' of the platform, which makes sense as the feature doesn't negatively impact internal assets or Gravatar users.
+        </p>
+    </body>
+    <script src="../../blog.js"></script>
+</html>

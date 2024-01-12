@@ -1,0 +1,331 @@
+@font-face {
+    font-family: Inter;
+    src: url('https://www.michaelrowley.dev/Inter/Inter-Bold.ttf');
+}
+
+@font-face {
+    font-family: InterMedium;
+    src: url('https://www.michaelrowley.dev/Inter/Inter-Medium.ttf');
+}
+
+@font-face {
+    font-family: InterBold;
+    src: url('https://www.michaelrowley.dev/Inter/Inter-ExtraBold.ttf');
+}
+
+html {
+    overflow: scroll;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* make scrollbar transparent */
+}
+
+@keyframes fadein {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+body {
+    animation: fadein 1s;
+    padding: 4% 10%;
+}
+
+body {
+    background-color: rgb(24, 31, 41);
+}
+
+h1 {
+    color: white;
+    font-weight: 800;
+    font-family: InterBold, Arial, Helvetica, sans-serif;
+    font-size: 40pt;
+    margin: 0;
+    text-align: center;
+}
+
+h2 {
+    font-weight: 700;
+    font-family: Inter, Arial, Helvetica, sans-serif;
+    font-size: 25pt;
+    color: rgba(0,247,255,1);
+    margin-bottom: 0;
+}
+
+h2 + p, h3 + p {
+    margin-top: 0;
+}
+
+h3 {
+    margin-bottom: 5px;
+    font-size: 17pt;
+    color: rgba(0,247,255,0.9);
+    font-weight: 700;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+p, i {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: white;
+    font-size: 12pt;
+}
+
+em {
+	text-shadow: rgba(255, 255, 255, 0.4) 1px 1px 4px;
+}
+
+p {
+    font-weight: 600;
+}
+
+a {
+    text-decoration: underline dotted 1px;
+    font-weight: 500;
+    font-family: InterMedium, Arial, Helvetica, sans-serif;
+    color: rgba(0,247,255,1);
+}
+
+hr {
+    height: 1px;
+    border: none;
+    background-color: rgba(0,247,255, 1);
+    margin: 6px 0 0 2px;
+}
+
+.date-line {
+    font-weight: 500;
+    font-family: InterMedium;
+    opacity: 0.7;
+    font-size: 10pt;
+    text-align: center;
+}
+
+.back-arrow {
+    position: absolute;
+    top: 8px;
+    left: 6px;
+    transform: rotate(135deg);
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+}
+
+.home-tag {
+    position: fixed;
+    top: 0px;
+    left: 0;
+    font-size: 14pt;
+    font-family: Inter;
+    text-align: center;
+    padding: 0.1% 0.6% 0.1% calc(0.6% + 10px);
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 0 0 3px 0;
+    opacity: 0.4;
+    transition: 0.2s;
+}
+
+.home-tag:hover {
+    opacity: 1;
+}
+
+.home-tag span {
+    font-size: 20pt;
+}
+
+@media only screen and (max-width: 1400px) {
+    * {
+        text-align: center;
+    }
+    .home-tag {
+        visibility: hidden;
+    }
+}
+
+li {
+	margin-top: 4px;
+    color: rgba(0,247,255, 1);
+    font-family: Inter;
+    font-size: 13pt;
+}
+
+li span {
+    color: white;
+}
+
+li + p {
+    margin-left: 40px;
+    margin-top: 0;
+}
+
+img {
+    background-color: rgba(62, 62, 62, 1);
+    padding: 10px;
+    border: 1px solid rgba(0,247,255, 1);
+    border-radius: 4px;
+}
+
+.code-title {
+    font-family: InterMedium, Arial, Helvetica, sans-serif;
+    font-size: 10pt;
+    color: rgba(0,247,255, 1);
+    font-weight: 500;
+    display: inline;
+}
+
+.code {
+    background-color: rgba(62, 62, 62, 0.4);
+    text-align: left;
+    color: white;
+    font-family: Monospace;
+    font-size: 15px;
+}
+
+.language-tag {
+    user-select: none;
+    color: black;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    padding: 2px 6px;
+    width: fit-content;
+    font-weight: 500;
+    font-family: InterMedium, Arial, Helvetica, sans-serif;
+    font-size: 10pt;
+}
+
+.inline-code {
+    display: inline;
+    border-radius: 3px;
+    padding: 1px 6px;
+    font-weight: 500;
+}
+
+.block-code {
+    padding: 10px;
+}
+
+.block-code code {
+	white-space: pre;
+}
+
+video {
+    padding: 5px;
+}
+
+.block-code, .gist {
+    margin: auto;
+    width: fit-content;
+    max-width: 100%;
+    overflow-x: scroll;
+    height: fit-content;
+    border-radius: 10px;
+    border-left: 4px solid rgba(0,247,255,1);
+    box-shadow: 0 0 4px 0  rgba(0,0,0,0.75);
+}
+
+video {
+    border-radius: 10px;
+    box-shadow: 0 0 10px 0 white;
+}
+
+.gist-data .file-box .file .data .blob-code-content table tbody tr * {
+    font-size: 10pt;
+}
+
+.block-code code {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.gist *, .gist {
+    background-color: rgba(37, 37, 37, 1);
+}
+
+.gist .gist-file {
+    border: none !important;
+}
+
+.gist {
+    max-height: 300px !important;
+    max-width: 80% !important;
+}
+
+.gist .gist-data {
+    border-bottom: none !important;
+}
+
+.gist-data .file-box .file .data .blob-code-content table tbody tr td {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.gist-data .file-box .file .data .blob-code-content table tbody tr .pl-en {
+    color: rgba(0, 247, 255, 0.8);
+}
+
+.gist-data .file-box .file .data .blob-code-content table tbody tr .pl-s {
+    color: rgba(115, 255, 150, 0.8);
+}
+
+.gist-data .file-box .file .data .blob-code-content table tbody tr .pl-pds {
+    color: rgba(255, 133, 133, 0.8);
+}
+
+.gist-data .file-box .file .data .blob-code-content table tbody tr .pl-c1 {
+    color: rgba(119, 205, 255, 0.8);
+}
+
+.gist-data .file-box .file .data .blob-code-content table tbody tr .pl-smi {
+    color: rgba(250, 119, 255, 0.8);
+}
+
+.gist-meta {
+    display: none;
+}
+
+.brighten {
+    transition: 0.1s;
+}
+
+.brighten:hover {
+    color: rgba(255, 255, 255, 1);
+}
+
+#scroll-tab {
+    animation-name: ex;
+    animation-duration: 1s;
+    /* opacity: 0.3; */
+    width: 30px;
+    border-radius: 3px;
+    height: 70%;
+    top: 15%;
+    right: 20px;
+    position: fixed;
+    transition: 0.3s;
+    opacity: 1;
+}
+#scroll-tab:hover {
+    opacity: 0.8;
+}
+#scroll-body {
+    position: absolute;
+    width: 15%;
+    border-radius: 4px;
+    background-color: white;
+    height: 100%;
+    margin-left: 12px;
+    box-shadow: white 0 0 2px;
+}
+#scroll-marker {
+    border-radius: 7px;
+    width: 10px;
+    height: 1%;
+    box-shadow: white 0 0 5px;
+    background-color: white;
+    z-index: 1;
+    left: 9px;
+    position: absolute;
+}

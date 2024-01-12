@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-HLG1SDB3SL"></script>
+
+        <link rel="stylesheet" href="../../blog.css"/>
+        <style>
+            #gist122333184 {
+                max-height: 200px !important;
+            }
+        </style>
+        <link rel="icon" type="image/x-icon" href="https://www.michaelrowley.dev/favicon.ico">
+        <title>NetFilterSDK</title>
+    </head>
+    <body>
+        <div id="scroll-tab">
+            <center>
+                <div id="scroll-body"></div>
+                <div id="scroll-marker" style="height: 1%;"></div>
+            </center>
+        </div>
+
+        <a href="https://www.michaelrowley.dev/" class="home-tag" style="text-decoration: none; color: black;"><span class="back-arrow"></span>BACK</a>
+
+        <h1 style="margin-top: 5%;">Bypassing Driver Security With Race Conditions</h1>
+        <h2>Background</h2>
+        <p>
+            <a href="https://netfiltersdk.com/">NetFilterSDK</a> is a software development kit (SDK) that enables developers to use a kernel-mode driver and
+            user-mode API (library) to interact with network devices/events on a host device. It is sold to companies as a tool that
+            can be embedded within their own programs and as such, the SDK seems to be pretty widely deployed in a number of environments.
+        </p>
+        <p>
+            It's probably also worth noting that the binary name 'NetFilterSDK' was used by
+            <a href="https://www.gdatasoftware.com/blog/microsoft-signed-a-malicious-netfilter-rootkit">
+                malware that ended up being signed by Microsoft
+            </a>, leading to a substantial amount of name-confusion between the virus and legitimate product online.
+        </p>
+        <p>
+            There are two main vulnerabilities that are outlined in this writeup: a lack of security level properties applied to
+            a repackaged NetFilterSDK driver, and the NetFilterSDK's race condition in enforcing security parameters.
+            The former provides access to a machine's live networking traffic (including possible SSL decryption) as signed by an
+            unnamed vendor, and the latter provides similar access to any driver based on the SDK regardless of security parameters.
+        </p>
+        <center>
+            <i style="color: rgba(0,247,254,0.4);">
+                EDIT: Six months after initially attempting to contact the product owner, <a href="https://nvd.nist.gov/vuln/detail/CVE-2023-35863">CVE-2023-35863</a>
+                has been published which names the vendor as <a href="https://madefornet.com/">MADEFORNET</a>. The vulnerability
+                remains unpatched and no response was ever received to my initial email to the company.
+            </i>
+        </center>
+        <h2>Finding an Interesting Driver</h2>
+        <p>
+            Let's take a look at what <a href="https://github.com/michaellrowley/PE-Imports">PE-Imports</a> would output if it was used to
+            scan the driver in question (reordered listing for readability):
+        </p>
+        <div class="code block-code" style="border-left: none;border-top: 3px solid rgba(0,247,254,1);">
+            <span class="language-tag">IMPORTS LISTING</span>
+            <a style="text-decoration: none; color: white; font-size: 14px;" href="https://github.com/michaellrowley/PE-Imports">link</a>
+            <hr>
+            <div style="height: 245px; overflow-y: scroll; text-align: left;">
+                <code>
+                    driver_name.sys</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!<b style="color: rgb(255, 81, 0);">ZwSetSecurityObject</b>/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!<b style="color: rgba(149, 255, 0, 1);">MmBuildMdlForNonPagedPool</b>/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!<b style="color: rgba(149, 255, 0, 1);">MmMapLockedPagesSpecifyCache</b>/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!<b style="color: rgb(255, 81, 0);">RtlCreateSecurityDescriptor</b>/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!<b style="color: rgb(255, 81, 0);">RtlSetDaclSecurityDescriptor</b>/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!MmUnmapLockedPages/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!<b style="color: rgba(149, 255, 0, 1);">MmAllocatePagesForMdl</b>/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!<b style="color: rgb(255, 81, 0);">RtlLengthSid</b>/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!<b style="color: rgb(255, 81, 0);">RtlCreateAcl</b>/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!<b style="color: rgb(255, 81, 0);">RtlAddAccessAllowedAce</b>/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!<b style="color: rgba(149, 255, 0, 1);">IofCompleteRequest</b>/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!<b style="color: rgba(149, 255, 0, 1);">IoCreateDevice</b>/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!<b style="color: rgba(149, 255, 0, 1);">IoCreateSymbolicLink</b>/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!MmFreePagesFromMdl/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!PsCreateSystemThread/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!PsTerminateSystemThread/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!IoAllocateMdl/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!IoDeleteDevice/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!IoDeleteSymbolicLink/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!IoFreeMdl/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!IoReleaseCancelSpinLock/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!ExFreePoolWithTag/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!ExQueryDepthSList/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!ExpInterlockedPopEntrySList/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!ExpInterlockedPushEntrySList/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!ExInitializeNPagedLookasideList/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!ExDeleteNPagedLookasideList/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!ObReferenceObjectByHandle/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!ObfDereferenceObject/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!ZwClose/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!ZwOpenKey/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!ZwQueryValueKey/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!PsGetCurrentProcessId/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!ZwSetInformationThread/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!PsLookupProcessByProcessId/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!ObOpenObjectByPointer/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!__C_specific_handler/null</br>&nbsp;&nbsp;&nbsp;&nbsp;ntoskrnl.exe!SeExports/null</br>&nbsp;&nbsp;&nbsp;&nbsp;fwpkclnt.sys!FwpmTransactionBegin0/null</br>&nbsp;&nbsp;&nbsp;&nbsp;fwpkclnt.sys!FwpmTransactionCommit0/null</br>&nbsp;&nbsp;&nbsp;&nbsp;fwpkclnt.sys!FwpmTransactionAbort0/null</br>&nbsp;&nbsp;&nbsp;&nbsp;fwpkclnt.sys!FwpmProviderAdd0/null</br>&nbsp;&nbsp;&nbsp;&nbsp;fwpkclnt.sys!FwpmProviderContextDeleteByKey0/null</br>&nbsp;&nbsp;&nbsp;&nbsp;fwpkclnt.sys!FwpmSubLayerAdd0/null</br>&nbsp;&nbsp;&nbsp;&nbsp;fwpkclnt.sys!FwpmSubLayerCreateEnumHandle0/null</br>&nbsp;&nbsp;&nbsp;&nbsp;...
+                </code>
+            </div>
+        </div>
+        <p>
+            First of all, there are some references to functions with 'Mdl' or references to 'mapping' in the name,
+            these imports refer to interactions with a <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/using-mdls">'memory descriptor listing'</a>
+            where Windows can map physical memory pages to virtual memory buffers - this is a pretty important function as, if misused,
+            it is capable of acting as a privilege escalation vector (this is how most instances of such user-to-kernel escalations happen).
+        </br></br>
+            Being able to load data into arbitrary kernel regions isn't useful if the attacker already needs to be running as an administrator, and given
+            the driver's nature (intercepting and possibly even decrypting host machine traffic) there isn't a huge amount of capability that a kernel
+            implant could deliver beyond what is already included in the NetFilterSDK driver.
+            In order to interact with the driver and intercept traffic, the attacker will need to acquire a handle to the
+            <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/introduction-to-device-objects">'device object'</a> - this
+            is where the next set of 'good' imports comes in; <span class="code inline-code"><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-iocreatedevice">IoCreateDevice</a></span>
+            creates a device object which the user-mode API will later interact with (it should be noted that most drivers use
+            the <span class="code inline-code">DeviceCharacteristics</span> argument to pass in <span class="code inline-code" style="color:rgb(255, 120, 0);">FILE_DEVICE_SECURE_OPEN</span>
+            to limit security access), <span class="code inline-code"><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-iocreatesymboliclink">IoCreateSymbolicLink</a></span>
+            establishes a symbolic link that the user-mode application can use to communicate with the driver (another great sign if we hope to access the driver), and finally
+            <span class="code inline-code"><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-iocompleterequest">IofCompleteRequest</a></span> which
+            implies that the driver - to some degree - can handle <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/gettingstarted/i-o-request-packets">IRPs</a> (the main
+            way that handle-owners can communicate with drivers, often passing buffers that require delicate translation between kernel and user-mode memory).
+        </p>
+        <p>
+            On the not-so-great side, the driver appears to make use of a number of functions that setup/verify/assign security descriptors to events/objects,
+            possibly meaning that any access to the driver could be subject to a security routine.
+        </p>
+
+        <h2>Reverse Engineering</h2>
+        <p>
+            This section covers reversing the driver, the environment used was primarily comprised of a
+            <a href="https://www.vmware.com/uk/products/workstation-pro.html">VMware</a> Windows 11 instance
+            with a <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/windbg-overview">WinDbg</a> kernel pipe and
+            some other tools. In addition to dynamic analysis programs, I used Ghidra to actually take
+            a look into the binary of the '.sys' file and once I'd figured out that the driver was from NetFilterSDK, the API's '.dll' file
+            (choosing Ghidra over the <a href="https://cutter.re/">Rizin Cutter</a> project was due to the inherent KMDF support that could be imported through <span class="code inline-code"><a href="https://github.com/0x6d696368/ghidra-data">'gdt'</a></span> files,
+            and chosing it over <a href="https://hex-rays.com/ida-pro/">IDA Pro</a> came down to my need to work across multiple devices which a <a href="https://byte.how/posts/collaborative-reverse-engineering/">self-hosted server</a> could support).
+        </p>
+        <p>
+            Whenever any binary image is loaded to be run on Windows, an entrypoint function is called (unless compiled not to export a default entrypoint) -
+            this can be <span class="code inline-code"><a href="https://learn.microsoft.com/en-us/windows/win32/learnwin32/winmain--the-application-entry-point">WinMain</a></span>,
+            <span class="code inline-code"><a href="https://learn.microsoft.com/en-us/windows/win32/dlls/dllmain">DllMain</a></span>, or in the instance
+            of kernel-mode drivers, <span class="code inline-code"><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/wdf/driverentry-for-kmdf-drivers">DriverEntry</a></span>.
+        </p>
+        <p>
+            <span class="code inline-code">DriverEntry</span> has two parameters: a <span class="code inline-code"><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object">DRIVER_OBJECT</a>*</span>,
+            and a <span class="code inline-code"><a href="https://learn.microsoft.com/en-us/windows/win32/api/subauth/ns-subauth-unicode_string">UNICODE_STRING</a>*</span>
+            with the former referring to the driver whose entrypoint is being called, and the latter containing its 'registry path'.
+            When this entrypoint is called in the driver being analysed, two functions are called: one checks the state of some global variables
+            and the other function (<span class="code inline-code">FUN_000208e0</span>/<i>'DriverInitFn'</i>) is called with the driver object and
+            registry path being passed in through <span class="code inline-code">RCX</span> and <span class="code inline-code">RDX</span>, respectively:
+        </p>
+        <hr>
+        <h3>Dispatch Setup</h3>
+        <div class="code block-code" style="border-left: none;border-top: 3px solid rgba(0,247,254,1);">
+            <span class="language-tag">ASSEMBLY</span><span style="margin-left: 15px;">DriverInitFn (<span class="code inline-code">FUN_000208e0</span>)</span>
+            <hr>
+            <code>
+                </br>0001133d&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LEA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RDI,[RCX&nbsp;+&nbsp;0x70]</br>00011341&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LEA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAX,[FUN_0001813c]</br>00011348&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MOV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ECX,0x1c</br>0001134d&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;STOSQ.REP&nbsp;&nbsp;RDI=>FUN_0001813c</br>00011350&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LEA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAX,[FUN_000112e4]</br>00011357&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MOV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;qword&nbsp;ptr&nbsp;[RCX&nbsp;+&nbsp;0x68],RAX=>FUN_000112e4
+            </code>
+        </div>
+        <p>
+            This segment of code takes the structure at <span class="code inline-code">DRIVER_OBJECT + <span style="color: rgba(0,247,254,1);">0x70</span></span> -- the
+            <span class="code inline-code"><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nc-wdm-driver_dispatch">DRIVER_DISPATCH</a></span> list --
+            and loads its address to <span class="code inline-code">RDI</span> and then loads the pointer to another function (<span class="code inline-code">FUN_0001813c</span>/<span class="code inline-code">MajorIRPHandler</span>)
+            into <span class="code inline-code">RAX</span> before setting <span class="code inline-code">ECX</span> to <span class="code inline-code">0x1C</span>. All of these
+            assignments are essentially setting up a call to <span class="code inline-code">STOSQ.REP</span>. The <span class="code inline-code">STOSQ</span> instruction on its
+            own can be thought of as your CPU's interpretation of <span class="code inline-code"><a href="https://cplusplus.com/reference/cstring/memcpy/">memcpy</a>(RDI, RAX, sizeof(void*))</span>
+            but when the 'REP'-suffixed version is used, it essentially loops the aforementioned operation <span class="code inline-code">ECX</span> times.
+        </p>
+        <p>
+            After getting that far into the assembly, it becomes apparent that the above code loops over the local driver's dispatch table and sets all of the <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/irp-major-function-codes">major IRP functions</a>
+            to a single handler, <span class="code inline-code">MajorIRPHandler</span>, at <span class="code inline-code">FUN_0001813c</span>. More on that later!
+        </br></br>
+            In addition, the final two instructions just load a pointer to the function as <span class="code inline-code">FUN_000112e4</span> into
+            the member at <span class="code inline-code" style="color: rgba(0,247,254,1);">0x68</span> of the <span class="code inline-code">DRIVER_OBJECT</span> object; thus setting
+            the <span class="code inline-code"><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nc-wdm-driver_unload">DRIVER_UNLOAD</a></span>
+            dispatch to call <span class="code inline-code">FUN_000112e4</span>.
+        </p>
+        <hr></br>
+        <h3>Device Initialization</h3>
+        <p>
+            As previously mentioned, in order to interact with this kernel-mode driver via IRPs, we need a handle to an exposed
+            device object where a handle can be opened from user-mode - preferably from an unprivileged perspective.
+        </br>
+            Immediately following the setup of the dispatch functions, <span class="code inline-code">FUN_000112e4</span> is called. This function
+            is where the interactivity capability is established by calling <span style="color: rgba(149, 255, 0, 1);" class="code inline-code">IoCreateDevice</span>
+            with a semi-hardcoded name (<span class="code inline-code">\Device\CtrlSM<span style="opacity: 0.5;">VARIABLE</span></span>)
+            and unfortunately for a would-be attacker, this function is called with the flag <span class="code inline-code" style="color:rgb(255, 120, 0);">FILE_DEVICE_SECURE_OPEN</span> - uh oh!
+        </p>
+        <p>
+            By default, Windows will let any user <i>try</i> to open a handle to any device (there are still a couple of ways that handle creation can be selectively blocked
+            by hooking handle creation or by blocking <span class="code inline-code"><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/irp-mj-create">IRP_MJ_CREATE</a></span> but that isn't what this driver does).
+            The operating system allows drivers the ability to limit access to its devices using functions like <span class="code inline-code"><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdmsec/nf-wdmsec-wdmlibiocreatedevicesecure">IoCreateDeviceSecure</a></span>
+            and the <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/controlling-device-namespace-access">FILE_DEVICE_SECURE_OPEN</a> device characteristics
+            which essentially mirrors access control restrictions from the driver object to any attempts to access the device from user-mode. This means that we now need to confirm
+            that those security descriptor functions aren't appropriately used in the environment that this driver is running (otherwise, interaction with the targeted driver
+            is confined to other functions, mostly in the form of system-wide callbacks which are heavily sanitized by the OS).
+        </p>
+        <p>
+            Next up, a symbolic link is created between the device and <span class="code inline-code">\DosDevices\CtrlSM<span style="opacity: 0.5;">VARIABLE</span></span>, pretty standard for
+            any driver that wants to handle inter-process communication.
+            We drop into <span class="code inline-code">FUN_000138dc</span> which checks the <span class="code inline-code">seclevel</span> member at <span class="code inline-code"><a href="https://www.netfiltersdk.com/help/nfsdk2/nfapi_registry.htm">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\</a><span style="opacity: 0.5;">VARIABLE</span></span>.
+            If the <span class="code inline-code">seclevel</span> value isn't set to allow universal access, <i>another</i> function is called.
+        </p>
+
+        <script src="https://gist.github.com/michaellrowley/6a42eba6bf6b04a272e7ef6e3cf79d3e.js"></script>
+        <p>
+            In conclusion, as long as the driver doesn't set the <span class="code inline-code">seclevel</span> registry key to <span class="code inline-code">1</span> or <span class="code inline-code">2</span>,
+            opening a handle is fine from Windows' verification perspective. In case you were wondering, here's the flow of the <span class="code inline-code">IRP_MJ_CREATE</span> handler, which could have
+            been used to reject an unauthorised handle request but simply prevents multiple handles being issued using a spinlock (a.k.a 'fancy kernel mutex'):
+        </p>
+        <script src="https://gist.github.com/michaellrowley/7de43ff74c9c4359d0328ecf8f6ee62d.js"></script>
+        <h2>Exploitation</h2>
+        <p>
+            The end goal for this writeup is gaining a handle, from an unprivileged user-mode application, to the vendor-compiled NetFilterSDK driver.
+            From that point, a malicious application would be able to make legitimate API calls that deliver access to raw TCP/UDP streams as well as
+            intercepting system-wide network traffic (including HTTPS) without on-system security products flagging anything suspicious.
+            In the third-party application that I discovered this issue on, an administrative service application launched the driver using
+            <span class="code inline-code"><a href="https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-createservicea">CreateServiceA</a></span>
+            and subsequently <span class="code inline-code"><a href="https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-startservicea">StartServiceA</a></span>
+            to launch the driver after installing it, I didn't identify any modification of the <span class="code inline-code">seclevel</span> value however there seemed
+            to be some form of attempt to prevent unprivileged access through the usage of <span class="code inline-code"><a href="https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-setsecuritydescriptorsacl" style="color:rgb(255, 100, 0);">SetSecurityDescriptorSacl</a></span>,
+            <span class="code inline-code"><a href="https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-setsecuritydescriptordacl" style="color:rgb(255, 100, 0);">SetSecurityDescriptorDacl</a></span>, <span class="code inline-code"><a href="https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-initializesecuritydescriptor" style="color:rgb(255, 100, 0);">InitializeSecurityDescriptor</a></span>,
+            <span class="code inline-code"><a href="https://learn.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsecuritydescriptortosecuritydescriptora" style="color:rgb(255, 100, 0);">ConvertStringSecurityDescriptorToSecurityDescriptorA</a></span>, and <span class="code inline-code"><a href="https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupaccountsida" style="color:rgb(255, 100, 0);">LookupAccountSidA</a></span> to
+            apply the SDDL <span class="code inline-code" style="color: rgba(0,247,254,1);">S:(ML;;NW;;;LW)</span>.
+        </p>
+        <p>
+            In either case, this application has a gap between starting the driver's service and actually getting the single handle to that driver. This
+            timing gap is what we'll exploit by rapidly making attempts at claiming the driver's handle in order to hope that our 'malicious' user-mode application
+            is able to complete a request between the time it takes for the official service to create the driver server and send its own request.
+        </p>
+
+        <script src="https://gist.github.com/michaellrowley/f4b8af83bfe59b6b61924fd33e2486fc.js"></script>
+        <p>
+            This proof-of-concept allows the process to get a handle to the repackaged NetFilterSDK driver installed by the third party vendor, from there - an attacker can
+            intercept almost any networking traffic on the system but in the PoC script just calls the IOCTL <span class="code inline-code" style="color: rgba(0,247,254,1);">0x12C800</span> to allocate
+            and map some kernel-mode memory into the calling process' address space.
+        </p>
+        <center>
+            <video style="background-color: rgb(151, 178, 203); max-width: 100%; max-height: 400px;" controls>
+                <source src="NFSDK-PoC.mp4" type="video/mp4"></video>
+            </video>
+            <p>A (slightly redacted) demonstration of the exploit with 'seclevel' set to only allow admins.
+        </center>
+        <h2>Conclusion</h2>
+        <p>
+            There seems to be a lack of awareness about how device interaction could be limited throughout this application, ranging from the vendor failing to use <span class="code inline-code">seclevel</span>
+            to the fact that the key probably wouldn't have changed much as the security descriptors are applied <i>after</i> the
+            device is setup, a symbolic link is applied, and an IRP dispatch handler is assigned.
+        </p>
+        <p>
+            When I first discovered this vulnerability, I was unaware that the vendor had repackaged the NetFilterSDK binary and so I emailed them a couple of times a few months ago
+            to no reply.
+            After finding out that the driver was from NetFilterSDK I reached out to the owner of NetFilterSDK who confirmed that the behaviour was expected and that the third-party could
+            patch the issue by using the aforementioned registry key to limit access (again, something that seems unlikely due to the order of applying the security policy).
+        </p>
+        <p>
+            No patch is currently available for this as the third-party didn't acknowledge any emails. Additionally, this vendor seems to be a primarily B2B company that lists
+            a number of fortune 500 companies as its customers, making it unlikely that an individual subscriber such as myself will get a response from their support team any time soon.
+        </p>
+    </body>
+    <script src="../../blog.js"></script>
+</html>

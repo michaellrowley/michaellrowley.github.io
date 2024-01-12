@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-HLG1SDB3SL"></script>
 
     <script>
     window.addEventListener("scroll",function() {
-        document.getElementById("header-bar").style.opacity = window.scrollY > 260 ? "1" : "0";
+        document.getElementById("header-bar-title").style.opacity = window.scrollY > 100 ? "1" : "0";
     });
     </script>
 
@@ -18,83 +18,146 @@
     </head>
     <body>
         <div id="header-bar" class="bigscreen-only">
-            <h3 style="font-size: 15pt">MICHAEL ROWLEY</h3>
-            <div id="header-links">
+            <h3 id="header-bar-title" style="width: 20vw; transition: 0.25s; opacity: 0; font-size: 15pt">MICHAEL ROWLEY</h3>
+            <div id="header-links" style="margin-left: auto; margin-right: 20vw;">
                 <p>
                     <a href="https://www.linkedin.com/in/michaellrowley/">LinkedIn</a>
                     <a href="https://github.com/michaellrowley/">GitHub</a>
-                    <a href="https://www.michaelrowley.dev/research/">Research Blog</a>
-                    <a style="color: rgba(255, 255, 100, 1);" href="https://vial.michaelrowley.dev/">Vulnerabilities</a>
                 </p>
             </div>
         </div>
         <div id="header-block">
             <h1>Michael Rowley</h1>
-            <h2 class="hover-opacity">Researching & Developing Secure Software</h2>
+            <h2 style="padding: 0 5px;" class="hover-opacity">Researching & Developing Secure Software</h2>
             </br>
         </div>
         <div id="rest-of-page">
             <div class="block">
                 <h2 style="height: 50px;">About Me</h2>
                 <p style="margin-top: -30px;font-size: 17pt;font-family: Inter, Arial, Helvetica, sans-serif;">
-                    I'm pursuing a career in joint <span class="bigscreen-only">cybersecurity</span>
-                    <em class="smallscreen-only">cybersecurity</em> and <span class="bigscreen-only">software engineering</span><em class="smallscreen-only">software engineering</em> endeavours<span class="smallscreen-only">.</span>
-                    <span class="bigscreen-only">
-                        - and with certificates in C and C++ software development from <em>Dartmouth University</em>,
-                        <em>Institut Mines-Telecom</em>, and <em>LinkedIn Learning</em>,
-                        I am always looking to learn about new and interesting technology!
-                    </span>
+                    I'm an enthusiastic <em>software engineer</em> and <em>cybersecurity researcher</em> looking to
+                    responsibly discover critical software vulnerabilities in interesting technology.
                     </br>
-                    Some of my notable and publicly-disclosed vulnerabilities are maintained on a
-                    <em><a href="https://vial.michaelrowley.dev" style="text-shadow: rgba(0, 247, 255, 0.3) 2px 2px 3px;">subdomain</a></em>, using a <em><a href="https://www.michaelrowley.dev/research/posts/vial/vial.html" style="text-shadow: rgba(0, 247, 255, 0.3) 2px 2px 3px;">custom-made system</a></em>.
+                    Over the last few years I have disclosed over <em>50 vulnerabilities</em> to charities, fortune 500
+                    companies, and independent developers.
                 </p>
             </div>
             <div class="block">
-                <h2>Recent Projects</h2>
-                <p class="bigscreen-only" style="margin-top: -30px;font-size: 14pt;font-family: Inter, Arial, Helvetica, sans-serif;">
-                    Some of my interests have resulted in open-source projects being released via GitHub:
-                </p>
+                <h2>Projects & Published Vulnerabilities</h2>
                 <div id="projects-box">
-	                <div class="project-item" style="background-color: rgba(204, 122, 20, 0.1); border: 1.5px solid rgba(204, 122, 20, 0.6);" onclick="window.open('https://www.michaelrowley.dev/research/posts/vial/vial.html', '_blank');">
-	                    <h3>VIAL</h3>
-	                    <p>
-	                        A <em>full-stack</em> system for storing and reviewing sensitive vulnerabilities with encrypted reports
-							stored on a <em>peer-to-peer</em> network and decryption taking place in the client's browser.
-	                    </p>
-	                </div>
-                    <div class="project-item" onclick="window.open('https://github.com/michaellrowley/Selino', '_blank');">
-                        <h3>Selino</h3>
+                    <div class="vuln-list">
+    					<div class="project-item" rating="high" onclick="window.open('https://nvd.nist.gov/vuln/detail/CVE-2023-4695', '_blank');">
+                            <h3>PKP-Lib</h3>
+                            <h4>CVE-2023-4695</h4>
+                            <p>Predictable RNG deployed for token generation in PKP-lib.</p>
+                        </div>
+                        <div class="project-item" rating="high" onclick="window.open('https://nvd.nist.gov/vuln/detail/CVE-2023-3523', '_blank');">
+                            <h3>GPAC</h3>
+                            <h4>CVE-2023-3523</h4>
+                            <p>Out of bounds read in GPAC's 'vobsub' processing system.</p>
+                        </div>
+                        <div class="project-item" rating="medium" onclick="window.open('https://nvd.nist.gov/vuln/detail/CVE-2023-35863', '_blank');">
+                            <h3>HTTP Debugger</h3>
+                            <h4>CVE-2023-35863</h4>
+                            <p>Insufficient kernel-mode access control.</p>
+                        </div>
+					</div>
+					<div class="project-item" onclick="window.open('https://github.com/michaellrowley/Selino', '_blank');">
+                        <h3>
+                            <img style="width: 30px; margin: -3px 10px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Git-icon-white.svg/1200px-Git-icon-white.svg.png"></img>
+                            Selino
+                        </h3>
                         <p>
                             A <em>cross-platform</em> SOCKS4(a)/SOCKS5(h) proxy with integrated <em>Lua plugin</em> support
                             that allows users to extend the core functionality to suit specialized needs.
                         </p>
                     </div>
+                    <div class="project-item" style="background-color: rgba(204, 204, 0, 0.1); border: 1.5px solid rgba(204, 204, 0, 0.6);" onclick="window.open('./research/posts/nfsdk/nfsdk.html', '_blank');">
+                        <h3>
+                            <img style="width: 30px; margin: -3px 10px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Stacked_books_icon.svg/2089px-Stacked_books_icon.svg.png"></img>
+                            Race Conditions to Exploit Windows Drivers
+                        </h3>
+                        <p>
+                            A deep-dive into how <em>CVE-2023-35863</em> was discovered with the help of <em>PE-imports</em>,
+                            <em>Ghidra</em>, and a range of techniques to gain access to a <em>kernel-mode driver</em> providing plaintext access
+                            to users' <em>HTTPS</em> traffic.
+                        </p>
+                    </div>
+                    <div class="project-item" style="background-color: rgba(204, 0, 204, 0.1); border: 1.5px solid rgba(204, 0, 204, 0.6);" onclick="window.open('https://github.com/michaellrowley/PE-Imports', '_blank');">
+                        <h3>
+                            <img style="width: 30px; margin: -3px 10px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Git-icon-white.svg/1200px-Git-icon-white.svg.png"></img>
+                            PE-Imports
+                        </h3>
+                        <p>
+                            A <em>Python</em> script that enumerates over files or directories, printing the <em>static imports</em>
+                            of all executables that it finds. Useful when identifying interesting <em>drivers</em> to further research.
+                        </p>
+                    </div>
+                    <div class="vuln-list">
+                        <div class="project-item" rating="critical" onclick="window.open('https://nvd.nist.gov/vuln/detail/CVE-2022-0990', '_blank');">
+                            <h3>Calibre</h3>
+                            <h4>CVE-2022-0990</h4>
+                            <p>Server side request forgery in Calibre's 'book cover' retrieval system.</p>
+                        </div>
+                        <div class="project-item" rating="critical" onclick="window.open('https://nvd.nist.gov/vuln/detail/CVE-2022-33684', '_blank');">
+                            <h3>Apache Pulsar</h3>
+                            <h4>CVE-2022-33684</h4>
+                            <p>Insufficient SSL certificate verification in Pulsar's OAuth2.0 credential flow.</p>
+                        </div>
+                        <div class="project-item" rating="medium" onclick="window.open('https://nvd.nist.gov/vuln/detail/CVE-2022-0870', '_blank');">
+                            <h3>Gogs</h3>
+                            <h4>CVE-2022-0870</h4>
+                            <p>Bypass for SSRF protections in Gogs, a self-hosted Git application.</p>
+                        </div>
+                    </div>
                     <div class="project-item" style="background-color: rgba(255, 255, 255, 0.1); border: 1.5px solid rgba(255, 255, 255, 0.6);" onclick="window.open('https://github.com/michaellrowley/dll-sideloading', '_blank');">
-                        <h3>DLL Sideloading</h3>
+                        <h3>
+                            <img style="width: 30px; margin: -3px 10px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Git-icon-white.svg/1200px-Git-icon-white.svg.png"></img>
+                            DLL Sideloading
+                        </h3>
                         <p>
                             A <em>Windows</em> tool for use in triaging and identifying DLL sideloading/hijacking vulnerabilities in running processes by
                             <em>hooking</em> relevant functions at runtime.
                         </p>
                     </div>
                     <div class="project-item" style="background-color: rgba(40, 40, 240, 0.1); border: 1.5px solid rgba(40, 40, 240, 0.6);" onclick="window.open('https://github.com/michaellrowley/T2-lib', '_blank');">
-                        <h3>T2-Lib</h3>
+                        <h3>
+                            <img style="width: 30px; margin: -3px 10px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Git-icon-white.svg/1200px-Git-icon-white.svg.png"></img>
+                            T2-Lib
+                        </h3>
                         <p>
                             A performant, secure <em>C++ library</em> which leverages the <em>boost.asio</em> framework
                             to deliver an object-oriented networking model that can easily be used by
-                            other programs. This project was written in <em>C++ (17/20)</em> and is actively being used
-                            in another personal project.
+                            other programs. This project was written in <em>C++ (17/20)</em> and supported early versions of Selino (see above).
                         </p>
                     </div>
-                    <div class="project-item" style="background-color: rgba(204, 40, 40, 0.1); border: 1.5px solid rgba(204, 40, 40, 0.6);" onclick="window.open('https://github.com/michaellrowley/AQArm', '_blank');">
-                        <h3>AQArm</h3>
+                    <div class="project-item" style="background-color: rgba(204, 204, 0, 0.1); border: 1.5px solid rgba(204, 204, 0, 0.6);" onclick="window.open('./research/posts/ssrf/ssrf.html', '_blank');">
+                        <h3>
+                            <img style="width: 30px; margin: -3px 10px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Stacked_books_icon.svg/2089px-Stacked_books_icon.svg.png"></img>
+                            SSRF to Bypass Firewalls
+                        </h3>
+                        <p>
+                            Reviewing how server side request forgery (SSRF) could be used to transmit data between
+                            <em>firewalled networks</em> without triggering IP or domain-based blacklists, or by leveraging
+                            SSRF to pass data through whitelisted endpoints.
+                        </p>
+                    </div>
+                    <div class="project-item" style="background-color: rgba(240, 0, 240, 0.1); border: 1.5px solid rgba(240, 0, 204, 0.6);" onclick="window.open('https://github.com/michaellrowley/AQArm', '_blank');">
+                        <h3>
+                            <img style="width: 30px; margin: -3px 10px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Git-icon-white.svg/1200px-Git-icon-white.svg.png"></img>
+                            AQArm
+                        </h3>
                         <p>
                             A simplistic UI-driven interpreter of a limited <em>ARM</em> subset.
                             Written in <em>C++</em> using the <em>Qt Framework</em> and designed with future
                             modularity in mind, making additions to the instruction-set extremely simple.
                         </p>
                     </div>
-                    <div class="project-item" style="background-color: rgba(204, 204, 0, 0.1); border: 1.5px solid rgba(204, 204, 0, 0.6);" onclick="window.open('https://github.com/michaellrowley/SiteMon', '_blank');">
-                        <h3>SiteMon</h3>
+                    <div class="project-item" style="background-color: rgba(204, 204, 204, 0.1); border: 1.5px solid rgba(204, 204, 204, 0.6);" onclick="window.open('https://github.com/michaellrowley/SiteMon', '_blank');">
+                        <h3>
+                            <img style="width: 30px; margin: -3px 10px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Git-icon-white.svg/1200px-Git-icon-white.svg.png"></img>
+                            SiteMon
+                        </h3>
                         <p>
                             A Windows tool for monitoring websites for source-level changes
                             in content, this project is configurable via regular expressions,
@@ -102,20 +165,15 @@
                             Written in <em>C#</em> using the <em>.NET framework</em> and <em>WinForms</em> for the user-interface.
                         </p>
                     </div>
-                    <div class="project-item" style="background-color: rgba(204, 0, 204, 0.1); border: 1.5px solid rgba(204, 0, 204, 0.6);" onclick="window.open('https://github.com/michaellrowley/PNG-CMD', '_blank');">
-                        <h3>PNG-CMD</h3>
+                    <div class="project-item" onclick="window.open('https://github.com/michaellrowley/PNG-CMD', '_blank');">
+                        <h3>
+                            <img style="width: 30px; margin: -3px 10px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Git-icon-white.svg/1200px-Git-icon-white.svg.png"></img>
+                            PNG-CMD
+                        </h3>
                         <p>
                             A command-line application that allows users to explore the internals
                             of PNG image files and their comprising chunks. Written in <em>modern C</em> and
                             thoroughly tested using fuzzing (<em>AFL-Fuzz</em>) and a code assurance platform (<em>Codacy</em>).
-                        </p>
-                    </div>
-                    <div class="project-item" style="background-color: rgba(204, 122, 20, 0.1); border: 1.5px solid rgba(204, 122, 20, 0.6);" onclick="window.open('https://github.com/michaellrowley/PE-Imports', '_blank');">
-                        <h3>PE-Imports</h3>
-                        <p>
-                            A <em>Python</em> script that enumerates over files or directories, printing the imports
-                            of all executables that it finds. A good use-case for this script is to have a large
-                            directory of drivers which the script would then scan for interesting API imports.
                         </p>
                     </div>
                 </div>
