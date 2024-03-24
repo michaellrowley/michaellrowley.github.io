@@ -6,6 +6,9 @@
 
         <link rel="stylesheet" href="../../blog.css"/>
         <style>
+	    .js-file-line {
+  		color: rgba(255, 255, 255, 0.7) !important;
+            }
             #gist122333184 {
                 max-height: 200px !important;
             }
@@ -149,7 +152,7 @@
             Immediately following the setup of the dispatch functions, <span class="code inline-code">FUN_000112e4</span> is called. This function
             is where the interactivity capability is established by calling <span style="color: rgba(149, 255, 0, 1);" class="code inline-code">IoCreateDevice</span>
             with a semi-hardcoded name (<span class="code inline-code">\Device\CtrlSM<span style="opacity: 0.5;">VARIABLE</span></span>)
-            and unfortunately for a would-be attacker, this function is called with the flag <span class="code inline-code" style="color:rgb(255, 120, 0);">FILE_DEVICE_SECURE_OPEN</span> - uh oh!
+            and unfortunately for a would-be attacker, this function is called with the flag <span class="code inline-code" style="color:rgb(255, 120, 0);">FILE_DEVICE_SECURE_OPEN</span>.
         </p>
         <p>
             By default, Windows will let any user <i>try</i> to open a handle to any device (there are still a couple of ways that handle creation can be selectively blocked

@@ -125,7 +125,6 @@ hr {
     text-align: center;
     padding: 0.1% 0.6% 0.1% calc(0.6% + 10px);
     background-color: rgba(255, 255, 255, 1);
-    border-radius: 0 0 3px 0;
     opacity: 0.4;
     transition: 0.2s;
 }
@@ -169,6 +168,19 @@ img {
     border: 1px solid rgba(0,247,255, 1);
     border-radius: 4px;
 }
+
+marquee {
+	border: 1px dashed white;
+	opacity: 0.3;
+	marquee-speed: fast;
+	transition: 1s;
+}
+
+marquee:hover {
+	border: 1px solid white;
+	opacity: 1;
+}
+
 
 .code-title {
     font-family: InterMedium, Arial, Helvetica, sans-serif;
@@ -329,3 +341,4 @@ video {
     left: 9px;
     position: absolute;
 }
+
