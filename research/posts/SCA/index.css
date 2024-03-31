@@ -1,0 +1,70 @@
+.switch-btn {
+	border-radius: 15px;
+	width: fit-contents;
+	min-width: 20px;
+	padding: 2px 8px;
+	height: 23px;
+	line-height: 23px;
+	font-family: InterMedium;
+	background-color: rgba(255, 255, 255, 0.25);
+	box-shadow: 0 0 3px black;
+	color: white;
+	display: inline-block;
+	margin: 0 3px;
+	cursor: pointer;
+
+	transition: 0.2s;
+}
+.switch-btn:hover {
+	background-color: rgba(255, 255, 255, 0.15);
+}
+
+.switch-btn.active-btn {
+	background-color: rgba(30, 90, 150, 0.7);
+}
+
+.tab {
+	transition: 0.1s;
+	display: none;
+}
+
+.tab.active {
+	display: block;
+}
+
+#strcmp-graph {
+	width: 100%;
+	margin-bottom: 40px;
+	height: 250px;
+	border-left: 1px dashed #00f7ff;
+	border-bottom: 1px dashed #00f7ff;
+}
+
+.graph-line {
+	position: absolute;
+	background-color: rgba(255, 255, 255, 0.15);
+	border: 1px dashed white;
+	border-radius: 100%;
+	width: 30px; height: 30px;
+	line-height: 30px;
+	color: white;
+	font-size: 15px;
+	box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+	transition: 0.3s;
+	text-align: center;
+	font-family: arial;
+	border: inline-block;
+}
+
+.graph-line:hover {
+	box-shadow: 0 0 10px white;
+	cursor: default;
+}
+
+.graph-mid {
+	position: absolute;
+	font-size: 10px;
+	font-family: tahoma;
+	opacity: 0.8;
+	text-align: center;
+}
