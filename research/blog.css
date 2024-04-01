@@ -169,6 +169,7 @@ marquee {
 	opacity: 0.3;
 	marquee-speed: fast;
 	transition: 1s;
+	color: white;
 }
 
 marquee:hover {
@@ -346,10 +347,16 @@ video {
 	box-shadow: 0 0 0 rgb(255, 0, 51);
 }
 .tlp-amber:hover {
-	box-shadow: 0 0 5px rgb(255, 192, 0);
+	box-shadow: 0 0 30px rgba(255, 192, 0, 0.3);
 }
 .tlp-amber {
 	color: rgb(255, 192, 0);
+}
+.tlp-green {
+	color: rgb(51, 255, 0);
+}
+.tlp-green:hover {
+	box-shadow: 0 0 30px rgba(51, 255, 0, 0.3);
 }
 
 .tlp-marker {
@@ -383,7 +390,7 @@ video {
 
 @media only screen and (max-width: 1400px) {
     * {
-        text-align: center;
+/*        text-align: center;*/
     }
     .home-tag {
         visibility: hidden;
