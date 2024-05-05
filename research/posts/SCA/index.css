@@ -68,3 +68,11 @@
 	opacity: 0.8;
 	text-align: center;
 }
+
+:where(.plot-d6a7b5) {
+	margin: auto;
+}
+
+g[aria-label="y-axis tick"], g[aria-label="x-axis tick"], g[aria-label="y-axis tick label"] {
+	display: none;
+}
