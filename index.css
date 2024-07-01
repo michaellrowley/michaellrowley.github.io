@@ -18,6 +18,11 @@
     src: url('./Raleway-Dots/RalewayDots-Regular.ttf');
 }
 
+@font-face {
+    font-family: RedHat;
+    src: url('./Red\ Hat/RedHatDisplay-Regular.ttf');
+}
+
 html {
     scroll-behavior: smooth;
 }
@@ -64,6 +69,33 @@ h3 {
 
 a:hover {
     cursor: pointer;
+}
+
+@keyframes highlight-anim {
+	0% {
+		text-shadow: 0 0 0px rgb(255, 255, 0);
+	}
+	50% {
+		text-shadow: 0 0 2px rgb(255, 255, 0);
+	}
+	100% {
+		text-shadow: 0 0 0px rgb(255, 255, 0);
+	}
+}
+
+.highlight {
+	animation: highlight-anim 2s infinite;
+	text-shadow: 0 0 3px rgb(255, 255, 0);
+	color: rgb(255, 255, 0);
+}
+h4 {
+	font-weight: 300;
+	font-family: RedHat;
+	font-size: 1.2em;
+}
+
+.glow {
+	text-shadow: 0 0 4px white;
 }
 
 h1 {
@@ -284,6 +316,7 @@ a:hover {
 }
 
 @media screen and (min-width: 1400px) {
+
     #header-block h1, #header-block h2 {
         display: inline-block;
     }
@@ -307,7 +340,7 @@ a:hover {
         background-size: 20px 20px, 20px 20px, 5px 5px, 5px 5px;
         background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
     }
-    
+
     .vuln-list {
         display: flex;
         width: 100%;
@@ -329,6 +362,10 @@ a:hover {
 }
 
 @media screen and (max-width: 1399px) {
+	.project-item h3 {
+	    width: 100%;
+	    font-size: 8pt;
+	}
     #projects-box, .vuln-list {
         display: flex;
         overflow-x: scroll;
