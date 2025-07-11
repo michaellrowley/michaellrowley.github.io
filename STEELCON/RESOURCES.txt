@@ -1,0 +1,19 @@
+Toolset & Scripts:
+  https://github.com/NationalSecurityAgency/ghidra
+  https://cloud.binary.ninja/
+  https://github.com/michaellrowley/PE-Imports
+  
+Driver Samples:
+  http://michaelrowley.dev/STEELCON/beep.sys
+  http://michaelrowley.dev/STEELCON/amdfendr.sys
+  http://michaelrowley.dev/STEELCON/RTCore64.sys
+  http://michaelrowley.dev/STEELCON/HttpDebuggerSdk.sys
+  
+Other Links:
+  https://reactos.org/
+  https://github.com/ayyucedemirbas/Windows-Research-Kernel-WRK-
+  http://michaelrowley.dev/STEELCON/SteelCon GUIDE.pdf
+  https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/writing-a-driverentry-routine
+  [Further Reading]
+  https://www.geoffchappell.com/studies/windows/km/index.htm
+  https://www.alex-ionescu.com/
