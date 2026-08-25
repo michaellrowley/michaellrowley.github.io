@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-HLG1SDB3SL"></script>
+
+        <link rel="stylesheet" href="../../blog.css"/>
+        <link rel="icon" type="image/x-icon" href="https://www.michaelrowley.dev/favicon.ico">
+        <title>IAT Patching</title>
+	</head>
+	<body>
+        <div id="scroll-tab">
+            <center>
+                <div id="scroll-body"></div>
+                <div id="scroll-marker" style="height: 1%;"></div>
+            </center>
+        </div>
+		<a href="https://www.michaelrowley.dev/" class="home-tag" style="text-decoration: none; color: black;"><span class="back-arrow"></span>BACK</a>
+
+		<h1 style="margin-top: 5%;">Patching the Import Address Table</h1>
+		<p style="text-align: center; opacity: 0.5;">This post is oriented towards Windows applications.</p>
+		<h2>Background</h2>
+		<p>
+			Recently, I've been exploring an issue whose solution involves redirecting calls targeting one function towards another - something that isn't difficult by any
+			stretch of the imagination. Techniques like <a href="https://malwaretech.com/2015/01/inline-hooking-for-programmers-part-1.html">trampoline hooking</a> (or
+			'<a href="https://www.microsoft.com/en-us/research/project/detours/">detours</a>' as Microsoft calls them),
+			<a href="https://mark.rxmsolutions.com/hook-via-vectored-exception-handling/">vectored exception handling</a>,
+			<a href="https://dimitrifourny.github.io/2014/07/02/vtable-hooking.html">virtual table hooking</a>, using a hypervisor/breakpoints,
+			or even just overwriting the import address table (IAT), export address table (EAT) are all viable and the majority of them would get the job done, and there
+			are hundreds of open-source implementations of each technique available for reference. So why not use one of them?
+		</p>
+		<p>
+			There are two key issues here; firstly, the solution has no way of cleanly executing in the context of the affected process
+			(this could be achieved by spawning a thread in the process via <a href="https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createremotethreadex">CreateRemoteThreadEx</a>,
+			but that requires permissions the solution application may be unable to gain at runtime, and-) secondly, the implementation needs to have minimal performance
+			impact on the process, to the extent that the replaced call should execute <i>faster</i> than the original and take no more time to setup.
+			This means that writing to process memory at runtime isn't viable due to time constraints, therefore it was decided that some form of persistent binary modification needs to take place.
+			</br>
+			With the decision to patch the binary itself having been made, I figured that patching the import address table would be the easiest way to have a portable solution
+			across Windows applications, and with any luck, the principles (abstracting away from the file format itself) could be applied to Linux and macOS in the future.
+		</p>
+		<p>
+			So, how can we patch the IAT of a binary to the effect that it loads a separate dynamic-link library (DLL) every time the binary is run?
+			</br>
+			I started looking online for writeups about IAT patching, but was overwhelmed by the number of posts that cover IAT hooking at runtime, as opposed to persistent
+			overwiting of the table in a target file's binary. The closest I came to finding resources on the matter included hasherezade's <a href="https://hasherezade.github.io/IAT_patcher/">IAT Patching utility</a> (which, despite not being suited towards my goal, is an interesting tool that you should try) and
+			<a href="https://www.wired.com/images_blogs/threatlevel/2011/02/Symantec-Stuxnet-Update-Feb-2011.pdf">Stuxnet's technique for patching the IAT of a DLL</a>.
+			While both of these are genuinely useful resources, they actually have in-depth documentation about the process of IAT patching - hence this post.
+			</br>
+			<span style="opacity: 0.5; font-size: 13px;">Note: For the purpose of this post, I will be using 'IAT patching' to refer to the persistent binary modification technique, and 'IAT hooking' to address the runtime modification of the table or thunks, even though they are generally interchangable and IAT patching is considered a technique for IAT hooking.</span>
+		</p>
+
+		<p>
+			To properly convey my point, the above two links are the only resources I could locate about IAT patching, whereas all of these resources are available regarding runtime IAT hooking:
+		</p>
+		<script>var marqueeStop = false;</script>
+		<marquee onmousedown="marqueeStop=!marqueeStop;if (marqueeStop) {this.stop()};"onmouseover="this.stop();" onmouseout="if (!marqueeStop) {this.start();}"
+			style="padding: 0 0 5px 0; text-align; center;">
+
+			<p>
+				<a href="https://www.ired.team/offensive-security/code-injection-process-injection/import-adress-table-iat-hooking">Red Team Notes: 'IAT Hooking'</a> |
+				<a href="https://unprotect.it/technique/iat-hooking/">Unprotect.it: 'IAT Hooking'</a> |
+				<a href="https://github.com/m0n0ph1/IAT-Hooking-Revisited">m0n0ph1: 'IAT Hooking Revisited'</a> |
+				<a href="https://relearex.wordpress.com/2017/12/26/hooking-series-part-i-import-address-table-hooking/">Hooking Series PART I : Import Address Table Hooking</a>
+				<a href="https://www.unknowncheats.me/forum/general-programming-and-reversing/443248-iat-hook-explained.html">IAT Hook Explained</a>
+			</p>
+		</div>
+
+		<script src="../../blog.js"></script>
+	</body>
+</html>

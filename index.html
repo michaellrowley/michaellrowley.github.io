@@ -28,7 +28,7 @@
             <h3 id="header-bar-title" style="width: 20vw; transition: 0.25s; opacity: 0; font-size: 15pt">MICHAEL ROWLEY</h3>
             <div id="header-links" style="margin-left: auto; margin-right: 20vw;">
                 <p>
-                    <a href="https://www.linkedin.com/in/michaellrowley/">LinkedIn</a>
+                    <a href="https://www.linkedin.com/in/michael--r/">LinkedIn</a>
                     <a href="https://github.com/michaellrowley/">GitHub</a>
                     <a href="mailto:michaellrowley@protonmail.com">Email</a>
                 </p>
@@ -40,7 +40,7 @@
             </br>
         </div>
         <div id="rest-of-page">
-	        <div class="block">
+        <div class="block">
 				<center>
 					<div style="display: inline-flex;">
 						<h4>
@@ -64,10 +64,36 @@
             <div class="block">
                 <h2>Projects & Published Vulnerabilities</h2>
                 <div id="projects-box">
+	                <div class="project-item" onclick="window.open('./research/posts/bft-doorstop/bft-doorstop.html', '_blank');">
+	                    <h3>
+	                        <img style="width: 30px; margin: -3px 10px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Stacked_books_icon.svg/2089px-Stacked_books_icon.svg.png"></img>
+							Breaking Decentralized Communication Networks
+	                    </h3>
+	                    <p>
+							A brief explanation of how <em>Byzantine Fault Tolerant</em> networks can be compromised by simple implementation errors that attackers can exploit to escalate themselves into <em>outsized positions of influence</em> over systems based on "decentralized protocols".
+	                    </p>
+	                </div>
+	                <div class="vuln-list">
+		                <div class="project-item" rating="non-attributable" onclick="alert('This vulnerability was acknowledged, triaged, and patched by the vendor.\n\nDetails cannot be shared publicly due to clauses either in Rules of Engagement or Non-Disclosure Agreement(s).');">
+		                    <h3>Blockchain Network</h3>
+		                    <h4>Hidden by RoE or NDA</h4>
+		                    <p>Internal state derivation allows structural re-identification de-anonymization.</p>
+		                </div>
+						<div class="project-item" rating="medium" onclick="window.open('https://nvd.nist.gov/vuln/detail/CVE-2024-21971', '_blank');">
+						    <h3>AMD Kernel Driver</h3>
+						    <h4>CVE-2024-21971</h4>
+						    <p>Improper input validation in AMD Crash Defender.</p>
+						</div>
+		                <div class="project-item" rating="non-attributable" onclick="alert('This vulnerability was acknowledged, triaged, and patched by the vendor.\n\nDetails cannot be shared publicly due to clauses either in Rules of Engagement or Non-Disclosure Agreement(s).');">
+		                    <h3>P2P Zero-Knowledge App</h3>
+		                    <h4>Hidden by RoE or NDA</h4>
+		                    <p>Protocol flaw facilitates targeted Eclipse attack.</p>
+		                </div>
+	                </div>
                     <div class="project-item" style="background-color: rgba(204, 204, 0, 0.1); border: 1.5px solid rgba(204, 204, 0, 0.6);" onclick="window.open('./research/posts/SCA/index.html', '_blank');">
                         <h3>
                             <img style="width: 30px; margin: -3px 10px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Stacked_books_icon.svg/2089px-Stacked_books_icon.svg.png"></img>
-			    Timing Side Channel Attacks
+						    Timing Side Channel Attacks
                         </h3>
                         <p>
                         	An introduction to how timing discrepancies can be exploited in commmon implementations of functions specified in the <em>C</em>/<em>C++</em>/<em>PHP</em> standards, as well
@@ -75,22 +101,22 @@
                         </p>
                     </div>
                     <div class="vuln-list">
-			<div class="project-item" rating="high" onclick="window.open('https://nvd.nist.gov/vuln/detail/CVE-2023-4695', '_blank');">
-                            <h3>PKP-Lib</h3>
-                            <h4>CVE-2023-4695</h4>
-                            <p>Predictable RNG deployed for token generation in PKP-lib.</p>
-                        </div>
-                        <div class="project-item" rating="high" onclick="window.open('https://nvd.nist.gov/vuln/detail/CVE-2023-3523', '_blank');">
-                            <h3>GPAC</h3>
-                            <h4>CVE-2023-3523</h4>
-                            <p>Out of bounds read in GPAC's 'vobsub' processing system.</p>
-                        </div>
-                        <div class="project-item" rating="medium" onclick="window.open('https://nvd.nist.gov/vuln/detail/CVE-2023-35863', '_blank');">
-                            <h3>HTTP Debugger</h3>
-                            <h4>CVE-2023-35863</h4>
-                            <p>Insufficient kernel-mode access control.</p>
-                        </div>
-					</div>
+						<div class="project-item" rating="critical" onclick="window.open('https://nvd.nist.gov/vuln/detail/CVE-2022-33684', '_blank');">
+                               <h3>Apache Pulsar</h3>
+                               <h4>CVE-2022-33684</h4>
+                               <p>Insufficient SSL certificate verification in Pulsar's OAuth2.0 credential flow.</p>
+                           </div>
+                           <div class="project-item" rating="non-attributable" onclick="alert('This vulnerability was acknowledged, triaged, and patched by the vendor.\n\nDetails cannot be shared publicly due to clauses either in Rules of Engagement or Non-Disclosure Agreement(s).');">
+		                    <h3>Decentralized OS</h3>
+		                    <h4>Hidden by RoE or NDA</h4>
+		                    <p>Private network information enumeration and blind SSRF.</p>
+		                </div>
+						<div class="project-item" rating="medium" onclick="window.open('https://nvd.nist.gov/vuln/detail/CVE-2023-35863', '_blank');">
+                               <h3>HTTP Debugger</h3>
+                               <h4>CVE-2023-35863</h4>
+                               <p>Insufficient kernel-mode access control.</p>
+                           </div>
+	                </div>
 					<div class="project-item" onclick="window.open('https://github.com/michaellrowley/Selino', '_blank');">
                         <h3>
                             <img style="width: 30px; margin: -3px 10px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Git-icon-white.svg/1200px-Git-icon-white.svg.png"></img>
@@ -101,6 +127,23 @@
                             that allows users to extend the core functionality to suit specialized needs.
                         </p>
                     </div>
+                    <div class="vuln-list">
+						<div class="project-item" rating="high" onclick="window.open('https://nvd.nist.gov/vuln/detail/CVE-2023-4695', '_blank');">
+                            <h3>PKP-Lib</h3>
+                            <h4>CVE-2023-4695</h4>
+                            <p>Predictable RNG deployed for token generation in PKP-lib.</p>
+                        </div>
+                        <div class="project-item" rating="high" onclick="window.open('https://nvd.nist.gov/vuln/detail/CVE-2023-3523', '_blank');">
+                            <h3>GPAC</h3>
+                            <h4>CVE-2023-3523</h4>
+                            <p>Out of bounds read in GPAC's 'vobsub' processing system.</p>
+                        </div>
+                        <div class="project-item" rating="non-attributable" onclick="alert('This vulnerability was acknowledged, triaged, and patched by the vendor.\n\nDetails cannot be shared publicly due to clauses either in Rules of Engagement or Non-Disclosure Agreement(s).');">
+	                        <h3>Asset Marketplace</h3>
+	                        <h4>Hidden by RoE or NDA</h4>
+	                        <p>Server-side denial of service via crafted payloads sent to API.</p>
+	                    </div>
+					</div>
                     <div class="project-item" style="background-color: rgba(204, 204, 0, 0.1); border: 1.5px solid rgba(204, 204, 0, 0.6);" onclick="window.open('./research/posts/nfsdk/nfsdk.html', '_blank');">
                         <h3>
                             <img style="width: 30px; margin: -3px 10px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Stacked_books_icon.svg/2089px-Stacked_books_icon.svg.png"></img>
@@ -112,7 +155,24 @@
                             to users' <em>HTTPS</em> traffic.
                         </p>
                     </div>
-                    <div class="project-item" style="background-color: rgba(204, 0, 204, 0.1); border: 1.5px solid rgba(204, 0, 204, 0.6);" onclick="window.open('https://github.com/michaellrowley/PE-Imports', '_blank');">
+                    <div class="vuln-list">
+						<div class="project-item" rating="non-attributable" onclick="alert('This vulnerability was acknowledged, triaged, and patched by the vendor.\n\nDetails cannot be shared publicly due to clauses either in Rules of Engagement or Non-Disclosure Agreement(s).');">
+                            <h3>Social Platform</h3>
+                            <h4>Hidden by RoE or NDA</h4>
+                            <p>Partially Blind Server Side Request Forgery (SSRF).</p>
+                        </div>
+                        <div class="project-item" rating="medium" onclick="window.open('https://hackerone.com/reports/1081766', '_blank');">
+	                        <h3>Enjin</h3>
+	                        <h4>#1081766</h4>
+	                        <p>Stored XSS / Unrestricted Upload of File with Dangerous Type</p>
+	                    </div>
+                        <div class="project-item" rating="non-attributable" onclick="alert('This vulnerability was acknowledged, triaged, and patched by the vendor.\n\nDetails cannot be shared publicly due to clauses either in Rules of Engagement or Non-Disclosure Agreement(s).');">
+                            <h3>Asset Marketplace</h3>
+                            <h4>Hidden by RoE or NDA</h4>
+                            <p>Employee personal data leaked via undocumented API.</p>
+                        </div>
+					</div>
+                    <div class="project-item" style="/*background-color: rgba(204, 0, 204, 0.1); border: 1.5px solid rgba(204, 0, 204, 0.6);*/" onclick="window.open('https://github.com/michaellrowley/PE-Imports', '_blank');">
                         <h3>
                             <img style="width: 30px; margin: -3px 10px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Git-icon-white.svg/1200px-Git-icon-white.svg.png"></img>
                             PE-Imports
@@ -123,23 +183,23 @@
                         </p>
                     </div>
                     <div class="vuln-list">
-                        <div class="project-item" rating="critical" onclick="window.open('https://nvd.nist.gov/vuln/detail/CVE-2022-0990', '_blank');">
+	                    <div class="project-item" rating="non-attributable" onclick="alert('This vulnerability was acknowledged, triaged, and patched by the vendor.\n\nDetails cannot be shared publicly due to clauses either in Rules of Engagement or Non-Disclosure Agreement(s).');">
+	                        <h3>Identity Verification</h3>
+	                        <h4>Hidden by RoE or NDA</h4>
+	                        <p>Race condition in endpoint responsible for key management.</p>
+	                    </div>
+						<div class="project-item" rating="critical" onclick="window.open('https://nvd.nist.gov/vuln/detail/CVE-2022-0990', '_blank');">
                             <h3>Calibre</h3>
                             <h4>CVE-2022-0990</h4>
                             <p>Server side request forgery in Calibre's 'book cover' retrieval system.</p>
                         </div>
-                        <div class="project-item" rating="critical" onclick="window.open('https://nvd.nist.gov/vuln/detail/CVE-2022-33684', '_blank');">
-                            <h3>Apache Pulsar</h3>
-                            <h4>CVE-2022-33684</h4>
-                            <p>Insufficient SSL certificate verification in Pulsar's OAuth2.0 credential flow.</p>
-                        </div>
-                        <div class="project-item" rating="medium" onclick="window.open('https://nvd.nist.gov/vuln/detail/CVE-2022-0870', '_blank');">
-                            <h3>Gogs</h3>
-                            <h4>CVE-2022-0870</h4>
-                            <p>Bypass for SSRF protections in Gogs, a self-hosted Git application.</p>
-                        </div>
+	                    <div class="project-item" rating="non-attributable" onclick="alert('This vulnerability was acknowledged, triaged, and patched by the vendor.\n\nDetails cannot be shared publicly due to clauses either in Rules of Engagement or Non-Disclosure Agreement(s).');">
+	                        <h3>Social Media Platform</h3>
+	                        <h4>Hidden by RoE or NDA</h4>
+	                        <p>Race condition to introduce algorithmic bias in recommendation/influence.</p>
+	                    </div>
                     </div>
-                    <div class="project-item" style="background-color: rgba(255, 255, 255, 0.1); border: 1.5px solid rgba(255, 255, 255, 0.6);" onclick="window.open('https://github.com/michaellrowley/dll-sideloading', '_blank');">
+                    <div class="project-item" style="background-color: rgba(204, 204, 0, 0.1); border: 1.5px solid rgba(204, 204, 0, 0.6);" onclick="window.open('https://github.com/michaellrowley/dll-sideloading', '_blank');">
                         <h3>
                             <img style="width: 30px; margin: -3px 10px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Git-icon-white.svg/1200px-Git-icon-white.svg.png"></img>
                             DLL Sideloading
@@ -149,9 +209,26 @@
                             <em>hooking</em> relevant functions at runtime.
                         </p>
                     </div>
-                    <div class="project-item" style="background-color: rgba(40, 40, 240, 0.1); border: 1.5px solid rgba(40, 40, 240, 0.6);" onclick="window.open('https://github.com/michaellrowley/T2-lib', '_blank');">
+                    <div class="vuln-list">
+                        <div class="project-item" rating="medium" onclick="window.open('https://nvd.nist.gov/vuln/detail/CVE-2022-0870', '_blank');">
+                            <h3>Gogs</h3>
+                            <h4>CVE-2022-0870</h4>
+                            <p>Bypass for SSRF protections in Gogs, a self-hosted Git application.</p>
+                        </div>
+                        <div class="project-item" rating="non-attributable" onclick="alert('This vulnerability was acknowledged, triaged, and patched by the vendor.\n\nDetails cannot be shared publicly due to clauses either in Rules of Engagement or Non-Disclosure Agreement(s).');">
+                            <h3>Training Platform</h3>
+                            <h4>Hidden by RoE or NDA</h4>
+                            <p>User-existence enumeration via side-channel attack.</p>
+                        </div>
+                        <div class="project-item" rating="non-attributable" onclick="alert('This vulnerability was acknowledged, triaged, and patched by the vendor.\n\nDetails cannot be shared publicly due to clauses either in Rules of Engagement or Non-Disclosure Agreement(s).');">
+	                        <h3>Financial Services</h3>
+	                        <h4>Hidden by RoE or NDA</h4>
+	                        <p>IDOR leading to unauthenticated overwrite of targeted auth configurations.</p>
+	                    </div>
+                    </div>
+                    <div class="project-item" onclick="window.open('https://github.com/michaellrowley/T2-lib', '_blank');">
                         <h3>
-                            <img style="width: 30px; margin: -3px 10px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Git-icon-white.svg/1200px-Git-icon-white.svg.png"></img>
+                            <img style="width: 30px; margin: -3px 10px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Git-icon-white.svg/1200px-Git-icon-white.svg.png">
                             T2-Lib
                         </h3>
                         <p>
@@ -159,6 +236,23 @@
                             to deliver an object-oriented networking model that can easily be used by
                             other programs. This project was written in <em>C++ (17/20)</em> and supported early versions of Selino (see above).
                         </p>
+                    </div>
+                    <div class="vuln-list">
+	                    <div class="project-item" rating="non-attributable" onclick="alert('This vulnerability was acknowledged, triaged, and patched by the vendor.\n\nDetails cannot be shared publicly due to clauses either in Rules of Engagement or Non-Disclosure Agreement(s).');">
+	                        <h3>Financial Services</h3>
+	                        <h4>Hidden by RoE or NDA</h4>
+	                        <p>Multiple chained vulnerabilities leading to zero-interaction, full account takeover</p>
+	                    </div>
+	                    <div class="project-item" rating="non-attributable" onclick="alert('This vulnerability was acknowledged, triaged, and patched by the vendor.\n\nDetails cannot be shared publicly due to clauses either in Rules of Engagement or Non-Disclosure Agreement(s).');">
+	                        <h3>AI Communications Platform</h3>
+	                        <h4>Hidden by RoE or NDA</h4>
+	                        <p>IDOR leading to billing bypass.</p>
+	                    </div>
+	                    <div class="project-item" rating="non-attributable" onclick="alert('This vulnerability was acknowledged, triaged, and patched by the vendor.\n\nDetails cannot be shared publicly due to clauses either in Rules of Engagement or Non-Disclosure Agreement(s).');">
+	                        <h3>Public Affairs Service</h3>
+	                        <h4>Hidden by RoE or NDA</h4>
+	                        <p>API key misconfiguration & leak.</p>
+	                    </div>
                     </div>
                     <div class="project-item" style="background-color: rgba(204, 204, 0, 0.1); border: 1.5px solid rgba(204, 204, 0, 0.6);" onclick="window.open('./research/posts/ssrf/ssrf.html', '_blank');">
                         <h3>
@@ -171,7 +265,19 @@
                             SSRF to pass data through whitelisted endpoints.
                         </p>
                     </div>
-                    <div class="project-item" style="background-color: rgba(240, 0, 240, 0.1); border: 1.5px solid rgba(240, 0, 204, 0.6);" onclick="window.open('https://github.com/michaellrowley/AQArm', '_blank');">
+                    <div class="vuln-list">
+	                    <div class="project-item" rating="non-attributable" onclick="alert('This vulnerability was acknowledged, triaged, and patched by the vendor.\n\nDetails cannot be shared publicly due to clauses either in Rules of Engagement or Non-Disclosure Agreement(s).');">
+	                        <h3>Financial Services</h3>
+	                        <h4>Hidden by RoE or NDA</h4>
+	                        <p>Full MFA bypass by exploiting undocumented API.</p>
+	                    </div>
+	                    <div class="project-item" rating="non-attributable" onclick="alert('This vulnerability was acknowledged, triaged, and patched by the vendor.\n\nDetails cannot be shared publicly due to clauses either in Rules of Engagement or Non-Disclosure Agreement(s).');">
+	                        <h3>Blockchain Platform</h3>
+	                        <h4>Hidden by RoE or NDA</h4>
+	                        <p>Account presence disclosure via side-channel (endpoint timing discrepancy)</p>
+	                    </div>
+                    </div>
+                    <div class="project-item" style="/*background-color: rgba(240, 0, 240, 0.1); border: 1.5px solid rgba(240, 0, 204, 0.6);*/" onclick="window.open('https://github.com/michaellrowley/AQArm', '_blank');">
                         <h3>
                             <img style="width: 30px; margin: -3px 10px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Git-icon-white.svg/1200px-Git-icon-white.svg.png"></img>
                             AQArm
@@ -182,7 +288,7 @@
                             modularity in mind, making additions to the instruction-set extremely simple.
                         </p>
                     </div>
-                    <div class="project-item" style="background-color: rgba(204, 204, 204, 0.1); border: 1.5px solid rgba(204, 204, 204, 0.6);" onclick="window.open('https://github.com/michaellrowley/SiteMon', '_blank');">
+                    <div class="project-item" style="background-color: rgba(204, 204, 0, 0.1); border: 1.5px solid rgba(204, 204, 0, 0.6);" onclick="window.open('https://github.com/michaellrowley/SiteMon', '_blank');">
                         <h3>
                             <img style="width: 30px; margin: -3px 10px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Git-icon-white.svg/1200px-Git-icon-white.svg.png"></img>
                             SiteMon

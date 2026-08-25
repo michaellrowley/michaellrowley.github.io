@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="A case study of how implementation flaws in a decentralized network can turn targeted connection outages into Byzantine fault tolerance failures. Category: Cybersecurity">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"><!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-HLG1SDB3SL"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-HLG1SDB3SL');
+        </script>
+
+        <link rel="stylesheet" href="../../blog.css"/>
+        <style>
+			    .js-file-line {
+			  		color: rgba(255, 255, 255, 0.7) !important;
+            }
+            #gist122333184 {
+                max-height: 200px !important;
+            }
+            .bft-visual {
+                margin: 24px auto 28px auto;
+                max-width: 780px;
+                padding: 14px 16px 12px 16px;
+                border: 1px solid rgba(0,247,255,0.55);
+                border-radius: 8px;
+                background-color: rgba(8, 14, 22, 0.96);
+                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+            }
+            .bft-visual svg {
+                display: block;
+                width: 100%;
+                height: auto;
+            }
+            .bft-visual figcaption {
+                margin-top: 12px;
+                text-align: center;
+                font-size: 10.5pt;
+                font-weight: 500;
+                color: rgba(255, 255, 255, 0.88);
+            }
+            .bft-subnet-packet {
+                filter: drop-shadow(0 0 6px rgba(0,247,255,0.55));
+            }
+            .bft-subnet-packet-alt {
+                filter: drop-shadow(0 0 6px rgba(129,255,196,0.5));
+            }
+            .scroll-tab-inner {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .bft-inline-figure img {
+                display: block;
+                max-width: 100%;
+                max-height: 25vh;
+                margin: 0 auto;
+            }
+            .bft-quote {
+                margin: 12px auto;
+                max-width: 680px;
+                padding: 12px 18px;
+                border-left: 3px solid rgba(0,247,255,0.7);
+                background-color: rgba(255, 255, 255, 0.03);
+                font-style: italic;
+            }
+            .bft-quote p {
+                margin: 0;
+            }
+            .bft-note {
+                text-align: center;
+                font-style: italic;
+            }
+        </style>
+        <link rel="icon" type="image/x-icon" href="https://www.michaelrowley.dev/favicon.ico">
+        <script type="text/javascript" src="../../../LaTeXMathML.js"></script>
+        <title>Breaking Decentralized Communication Networks</title>
+    </head>
+    <body>
+        <div id="scroll-tab">
+            <div class="scroll-tab-inner">
+                <div id="scroll-body"></div>
+                <div id="scroll-marker" style="height: 1%;"></div>
+            </div>
+        </div>
+
+
+        <div id="header-bar">
+            <h3 id="header-bar-title" style="color: white; width: 20vw; transition: 0.25s; opacity: 1; margin-top: 15px; font-size: 15pt">MICHAEL ROWLEY</h3>
+            <div id="header-links" style="margin-left: -50px;">
+                <p>
+                    <a href="https://www.michaelrowley.dev/">Homepage</a>
+                </p>
+            </div>
+        </div>
+
+        <h1 style="margin-top: 5%;">Breaking Decentralized Communication Networks</h1>
+        <h2>Background</h2>
+        <p>
+	        Distributed communication networks often face a fundamental challenge of remaining resilient to challenges surrounding fault tolerance. This typically manifests itself in scenarios where an adversary has the ability to control or influence part of the network. In these scenarios, the malicious actor has an objective to negatively influence the confidentiality, integrity, or availability of the network as a whole.
+        </p>
+        <p>
+	        Today's networks operate in this fashion, and are expected to resist increasingly sophisticated attempts at influencing targeted or collections of devices/nodes. This writeup is created with the goal of providing a simplistic case study that people can walk through, step-by-step, in order to get a baseline level of understanding of how these networks’ security properties can be degraded after the identification of protocol/algorithm-level flaws has taken place.
+        </p>
+        <p>
+	        This write up is loosely based around a real example: I found a number of implementation flaws in an existing peer-to-peer network, established a fairly decent understanding of how security could be degraded from these flaws, and then disclosed it to the organisation responsible for maintaining the network who assessed and triaged its impact, and then patched it.
+        </p>
+
+        <h2>Byzantine Fault Tolerance</h2>
+        <p>
+        	When we talk about a malicious actor being able to influence the network, one interesting way to do this can involve introducing “faults” into the environment. To help quantify one category of “faults” that a network must be resilient to, the term "<em>byzantine fault</em>" has emerged. We'll use this to refer to any node inside a distributed system that may appear to have different attributes depending on the observer.
+
+        	Its etymology traces back to the <a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/12/The-Byzantine-Generals-Problem.pdf">Byzantine Generals Problem</a>, which refers to a theoretical situation wherein a collection of generals are attempting to coordinate an combined effect requiring the collective resource of each of their forces. The generals have to decide independently whether to contribute towards this combined effect, or to with draw support for the action.
+
+         		In order to successfully achieve their desired effect, all of the generals’ forces would be required; any less would lead to a net negative outcome.
+        </p>
+
+        <figure class="bft-visual">
+            <svg viewBox="0 0 760 280" role="img" aria-labelledby="bft-visual-title bft-visual-desc">
+                <title id="bft-visual-title">Byzantine Fault Tolerance visualisation</title>
+                <desc id="bft-visual-desc">A faulty node sends conflicting orders to honest nodes, which compare notes to identify a consistent majority view.</desc>
+                <defs>
+                    <marker id="bft-arrow-cyan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#00f7ff"></path>
+                    </marker>
+                    <marker id="bft-arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#ff7a7a"></path>
+                    </marker>
+                </defs>
+
+                <text x="380" y="20" text-anchor="middle" fill="rgba(255,255,255,0.92)" font-size="16" font-family="Inter, Arial, Helvetica, sans-serif">One participant tells different peers different stories</text>
+
+                <line x1="380" y1="78" x2="175" y2="176" stroke="#ff7a7a" stroke-width="3" marker-end="url(#bft-arrow-red)"></line>
+                <line x1="380" y1="78" x2="380" y2="176" stroke="#ff7a7a" stroke-width="3" marker-end="url(#bft-arrow-red)"></line>
+                <line x1="380" y1="78" x2="585" y2="176" stroke="#ff7a7a" stroke-width="3" marker-end="url(#bft-arrow-red)"></line>
+
+                <rect x="208" y="103" width="92" height="30" rx="15" fill="rgba(34,12,16,0.92)" stroke="rgba(255,122,122,0.55)"></rect>
+                <rect x="390" y="113" width="98" height="30" rx="15" fill="rgba(34,12,16,0.92)" stroke="rgba(255,122,122,0.55)"></rect>
+                <rect x="505" y="103" width="98" height="30" rx="15" fill="rgba(34,12,16,0.92)" stroke="rgba(255,122,122,0.55)"></rect>
+                <text x="254" y="123" text-anchor="middle" fill="#ffffff" font-size="15" font-family="InterMedium, Arial, Helvetica, sans-serif">“Attack”</text>
+                <text x="439" y="133" text-anchor="middle" fill="#ffffff" font-size="15" font-family="InterMedium, Arial, Helvetica, sans-serif">“Retreat”</text>
+                <text x="554" y="123" text-anchor="middle" fill="#ffffff" font-size="15" font-family="InterMedium, Arial, Helvetica, sans-serif">“Retreat”</text>
+
+                <line x1="205" y1="226" x2="350" y2="226" stroke="#00f7ff" stroke-width="2.5" stroke-dasharray="7 7" marker-end="url(#bft-arrow-cyan)"></line>
+                <line x1="410" y1="226" x2="555" y2="226" stroke="#00f7ff" stroke-width="2.5" stroke-dasharray="7 7" marker-end="url(#bft-arrow-cyan)"></line>
+                <line x1="216" y1="214" x2="544" y2="214" stroke="#00f7ff" stroke-width="2" stroke-dasharray="7 7" opacity="0.7"></line>
+
+                <circle cx="380" cy="70" r="38" fill="rgba(37,28,15,1)" stroke="#ff7a7a" stroke-width="2.5"></circle>
+                <text x="380" y="64" text-anchor="middle" fill="white" font-size="15" font-family="Inter, Arial, Helvetica, sans-serif">Faulty</text>
+                <text x="380" y="84" text-anchor="middle" fill="white" font-size="15" font-family="Inter, Arial, Helvetica, sans-serif">node</text>
+
+                <circle cx="175" cy="205" r="34" fill="rgba(0,247,255,0.08)" stroke="#00f7ff" stroke-width="2.5"></circle>
+                <circle cx="380" cy="205" r="34" fill="rgba(0,247,255,0.08)" stroke="#00f7ff" stroke-width="2.5"></circle>
+                <circle cx="585" cy="205" r="34" fill="rgba(0,247,255,0.08)" stroke="#00f7ff" stroke-width="2.5"></circle>
+
+                <text x="175" y="200" text-anchor="middle" fill="white" font-size="14" font-family="Inter, Arial, Helvetica, sans-serif">Honest</text>
+                <text x="175" y="218" text-anchor="middle" fill="white" font-size="14" font-family="Inter, Arial, Helvetica, sans-serif">node A</text>
+                <text x="380" y="200" text-anchor="middle" fill="white" font-size="14" font-family="Inter, Arial, Helvetica, sans-serif">Honest</text>
+                <text x="380" y="218" text-anchor="middle" fill="white" font-size="14" font-family="Inter, Arial, Helvetica, sans-serif">node B</text>
+                <text x="585" y="200" text-anchor="middle" fill="white" font-size="14" font-family="Inter, Arial, Helvetica, sans-serif">Honest</text>
+                <text x="585" y="218" text-anchor="middle" fill="white" font-size="14" font-family="Inter, Arial, Helvetica, sans-serif">node C</text>
+
+                <text x="380" y="260" text-anchor="middle" fill="rgba(255,255,255,0.92)" font-size="14" font-family="InterMedium, Arial, Helvetica, sans-serif">Honest nodes compare messages before deciding on a shared action.</text>
+            </svg>
+            <figcaption>
+                A Byzantine fault is dangerous because one participant can present conflicting realities to different observers at the same time.
+            </figcaption>
+        </figure>
+
+        <p>
+        	In this hypothetical, our generals are occasionally inconsistent, unpredictable, or malicious in how they report their intent. The way that our generals achieve consensus is actually by sending letters to each other (e.g., via carrier pigeon), thereby casting votes about their intended course of action. The part connecting this back to our definition of byzantine fault: any given malign general may cast one vote to member of the group/network, (e.g. "support" of the collective action) and another to the rest (e.g., intent to "abandon" the collective action) in order to encourage the adoption of a suboptimal strategy that wastes the resources of the other generals or results in a worse outcome than the one being coordinated by benign nodes.
+        </p>
+
+        <h3>Translation to Decentralized Networks</h3>
+        <p>
+        	The translation from the previous section is that we can consider decentralized networks of arbitrary nodes (devices, people, communities) an extension of the preceeding example; each general is a node, and each coordination of collective action is equivalent to a consensus-based voting mechanism.
+        </p>
+        <p>
+        	Within Byzantine Fault Tolerant (BFT) networks, we expect a finite, practicable amount of resilience - somewhere within the protocol - to arbitrarily "incorrect" nodes.
+         	These nodes may be exhibiting unintended behaviour as a result of a logic bug, environmental constraints (i.e., running out of RAM and swap memory to store new peers' keys), or because the node/peer is simply malign in nature.
+        </p>
+        <p>
+        	This is particularly important within the context of decentralized, peer-to-peer networks, wherein a connection to and from each node in the network (scales $O(n^2)$) is infeasible.
+         	Instead, many peer-to-peer networks aim to scale on a lower order (e.g., I believe <a href="https://www.avax.network/">Avalanche</a> targets peers-per-node on the order of $O(log n)$).
+          	Because each node cannot directly verify communication coming from every other node without some form of coordinated message signing, many protocols opt to architect networks in the form of many <em>subnets</em>:
+        </p>
+
+        <figure class="bft-visual">
+            <svg viewBox="0 0 760 300" role="img" aria-labelledby="bft-subnet-title bft-subnet-desc">
+                <title id="bft-subnet-title">Overlapping subnet visualisation</title>
+                <desc id="bft-subnet-desc">Three overlapping subnets share some nodes. Communication moves between subnets by following edges through the shared parts of the graph.</desc>
+
+                <text x="380" y="24" text-anchor="middle" fill="rgba(255,255,255,0.92)" font-size="16" font-family="Inter, Arial, Helvetica, sans-serif">Subnets can overlap, with traffic moving across shared parts of the graph</text>
+
+                <ellipse cx="240" cy="160" rx="140" ry="82" fill="rgba(0,247,255,0.045)" stroke="rgba(0,247,255,0.45)" stroke-width="2"></ellipse>
+                <ellipse cx="380" cy="160" rx="140" ry="82" fill="rgba(0,247,255,0.045)" stroke="rgba(0,247,255,0.45)" stroke-width="2"></ellipse>
+                <ellipse cx="520" cy="160" rx="140" ry="82" fill="rgba(0,247,255,0.045)" stroke="rgba(0,247,255,0.45)" stroke-width="2"></ellipse>
+
+                <text x="188" y="84" text-anchor="middle" fill="white" font-size="14" font-family="InterMedium, Arial, Helvetica, sans-serif">Subnet A</text>
+                <text x="380" y="84" text-anchor="middle" fill="white" font-size="14" font-family="InterMedium, Arial, Helvetica, sans-serif">Subnet B</text>
+                <text x="572" y="84" text-anchor="middle" fill="white" font-size="14" font-family="InterMedium, Arial, Helvetica, sans-serif">Subnet C</text>
+
+                <line x1="140" y1="165" x2="205" y2="128" stroke="rgba(0,247,255,0.72)" stroke-width="2.4"></line>
+                <line x1="140" y1="165" x2="225" y2="198" stroke="rgba(0,247,255,0.72)" stroke-width="2.4"></line>
+                <line x1="205" y1="128" x2="292" y2="145" stroke="rgba(0,247,255,0.72)" stroke-width="2.4"></line>
+                <line x1="225" y1="198" x2="292" y2="145" stroke="rgba(0,247,255,0.72)" stroke-width="2.4"></line>
+
+                <line x1="292" y1="145" x2="380" y2="120" stroke="rgba(0,247,255,0.72)" stroke-width="2.4"></line>
+                <line x1="292" y1="145" x2="380" y2="200" stroke="rgba(0,247,255,0.72)" stroke-width="2.4"></line>
+                <line x1="380" y1="120" x2="380" y2="200" stroke="rgba(0,247,255,0.5)" stroke-width="2"></line>
+                <line x1="380" y1="120" x2="468" y2="145" stroke="rgba(0,247,255,0.72)" stroke-width="2.4"></line>
+                <line x1="380" y1="200" x2="468" y2="145" stroke="rgba(0,247,255,0.72)" stroke-width="2.4"></line>
+
+                <line x1="468" y1="145" x2="535" y2="120" stroke="rgba(0,247,255,0.72)" stroke-width="2.4"></line>
+                <line x1="468" y1="145" x2="555" y2="192" stroke="rgba(0,247,255,0.72)" stroke-width="2.4"></line>
+                <line x1="535" y1="120" x2="622" y2="160" stroke="rgba(0,247,255,0.72)" stroke-width="2.4"></line>
+                <line x1="555" y1="192" x2="622" y2="160" stroke="rgba(0,247,255,0.72)" stroke-width="2.4"></line>
+
+                <circle cx="140" cy="165" r="15" fill="rgba(0,247,255,0.08)" stroke="#00f7ff" stroke-width="2.2"></circle>
+                <circle cx="205" cy="128" r="15" fill="rgba(0,247,255,0.08)" stroke="#00f7ff" stroke-width="2.2"></circle>
+                <circle cx="225" cy="198" r="15" fill="rgba(0,247,255,0.08)" stroke="#00f7ff" stroke-width="2.2"></circle>
+                <circle cx="292" cy="145" r="15" fill="rgba(0,247,255,0.1)" stroke="#00f7ff" stroke-width="2.2"></circle>
+
+                <circle cx="380" cy="120" r="15" fill="rgba(0,247,255,0.08)" stroke="#00f7ff" stroke-width="2.2"></circle>
+                <circle cx="380" cy="200" r="15" fill="rgba(0,247,255,0.08)" stroke="#00f7ff" stroke-width="2.2"></circle>
+                <circle cx="468" cy="145" r="15" fill="rgba(0,247,255,0.1)" stroke="#00f7ff" stroke-width="2.2"></circle>
+
+                <circle cx="535" cy="120" r="15" fill="rgba(0,247,255,0.08)" stroke="#00f7ff" stroke-width="2.2"></circle>
+                <circle cx="555" cy="192" r="15" fill="rgba(0,247,255,0.08)" stroke="#00f7ff" stroke-width="2.2"></circle>
+                <circle cx="622" cy="160" r="15" fill="rgba(0,247,255,0.08)" stroke="#00f7ff" stroke-width="2.2"></circle>
+
+                <circle r="5" fill="#00f7ff" class="bft-subnet-packet">
+                    <animateMotion dur="5.2s" repeatCount="indefinite" path="M 140 165 L 205 128 L 292 145 L 380 120 L 468 145 L 535 120 L 622 160"></animateMotion>
+                </circle>
+                <circle r="5" fill="#81ffc4" class="bft-subnet-packet-alt">
+                    <animateMotion dur="4.8s" begin="1s" repeatCount="indefinite" path="M 225 198 L 292 145 L 380 200 L 468 145 L 555 192"></animateMotion>
+                </circle>
+                <circle r="4" fill="#00f7ff" opacity="0.9" class="bft-subnet-packet">
+                    <animateMotion dur="6.2s" begin="2.1s" repeatCount="indefinite" path="M 622 160 L 535 120 L 468 145 L 380 120 L 292 145"></animateMotion>
+                </circle>
+
+                <text x="380" y="278" text-anchor="middle" fill="rgba(255,255,255,0.92)" font-size="14" font-family="InterMedium, Arial, Helvetica, sans-serif">Communication crosses subnets by following edges through nodes that sit in the overlapping regions.</text>
+            </svg>
+            <figcaption>
+                Overlapping subnets let a larger network stay sparse, while still allowing messages to move between groups through shared connectivity.
+            </figcaption>
+        </figure>
+
+        <p>
+        	These subnets aggregate to form a larger network, partially solving issues around the complexity of scaling, and partially concentrating trust. While this illustration is overly simple to help visualise the "overlapping nodes" concept,
+         	a single node in reality may connect many subnets together, alongside many other nodes connecting a different set of subnets.
+        </p>
+        <p>
+        	Your ears might've pricked up at the mention of centralizing trust: if there are malicious peers which constitute the sole "bridge" between two subnets which communicate in order to form consensus on task-critical topics, those malicious nodes could have outsized influence on the outcome of the voting.
+        </p>
+        <p>
+      		The foundational protocols that decentralized networks are built upon will typically take steps to prevent this scenario, among others.
+        	The original <a href="https://lamport.azurewebsites.net/pubs/byz.pdf">Byzantine Generals Problem</a> paper claims that - for an oral network
+         	(i.e., no message signing or sender attestation) of size $n$ peers combined, and $m$ malign peers - there is no way to maintain consistent, balanced network state where $n \le {3}m$.
+        </p>
+        <p>
+        	Lucky us, though! We <em>do</em> have the ability to deploy cryptographic attestation and other quirky technology that's best suited to the network's reason for existing (i.e., proof-of-work/stake/...),
+         	the <s>exciting</s> worrying part arises when we consider that for every anonymity network, blockchain, or distributed storage solution with a formal proof written in <a href="https://lean-lang.org/">Lean</a> or <a href="https://www.latex-project.org/">LaTeX</a> (i.e., a network that "looks good on paper" more often than not), there is a room full of programmers believing that memory safe languages will solve logic errors while being enabled by VC-driven crunch time and unreviewed code hitting CI pipelines to deliver software.
+        </p>
+        <p>
+        	Plus, sometimes software/systems engineers and agents make unavoidable errors - they aren't always caught!
+        </p>
+
+        <h2>Implementation Quirks</h2>
+        <p>
+        	I really meant that last comment about Rust! When a mathematician (or their LLM) writes $n \in \mathbb{N}$, someone then has to figure out whether they're referring to <a href="https://doc.rust-lang.org/std/primitive.u32.html"><span class="code inline-code">u32</span></a> or the larger <a href="https://docs.rs/bnum/latest/bnum/"><span class="code inline-code">U1024</span></a>, which is a trick question because they still need to figure out what will happen when an overflow occurs in either scenario.
+        </p>
+        <p>
+       		That's before they need to consider whether the creation of those objects is in a path which can be triggered by one or more malign nodes in support of a race condition which triggers exploitable undefined behaviour. If so, they need to figure out a resource exhaustion (read: <a href="https://www.giac.org/paper/gsec/313/naptha-type-denial-of-service-attack/100899">NAPTHA</a>) mitigation for managing that data. If not, a misbehaving peer might use mutexes or semaphores to prevent legitimate peers from communicating with the node in question altogether, giving those malicious peers with access to the concurrent path an outsized influence on that node's understanding of the network.
+        </p>
+        <p>
+        	The above scenario (and other things like the possibility of a replay attack) isn't unique to large-scale, distributed networks, which means that (hopefully) software engineers are copying mitigations from known-good sources.
+         	Some concepts, like <a href="https://www.sciencedirect.com/topics/computer-science/sybil-attack">Sybil</a> or <a href="https://www.nccgroup.com/research/how-to-spot-and-prevent-an-eclipse-attack/">Eclipse</a> attacks, <em>are</em> fairly specific to decentralised communications, as they target the primitives that allow peers to gain understanding of the network state.
+        </p>
+        <h3>Sybil Attacks</h3>
+        <p>
+        		A Sybil attack involves an adversary assuming multiple identities within a network, in order to increase their leverage/influence over the remaining nodes.
+         		In some cases, this may be performed by having a threat actor compromise a high-throughput server (or set of servers) with high bandwidth, lots of RAM, and compute capacity to run multiple identities from a single origin. Particularly without the original owner becoming suspicion about where the CPU spikes, extra page files being left on disk, or their metered bandwidth surcharges, are coming from. Then they may run
+          		the network's client in multiple segregated virtual machines or containers on that server, with reverse proxies being used to provide each containerised client
+            	with an independent IP address and/or domain (depending on the protocol) while each container provides itself with a unique key which is also used for identification/addressing.
+        </p>
+        <figure class="bft-visual">
+            <svg viewBox="0 0 760 300" role="img" aria-labelledby="sybil-visual-title sybil-visual-desc">
+                <title id="sybil-visual-title">Sybil attack visualisation</title>
+                <desc id="sybil-visual-desc">A single adversary controls several identities, making one attacker appear to the network as many separate peers.</desc>
+
+                <text x="380" y="24" text-anchor="middle" fill="rgba(255,255,255,0.92)" font-size="16" font-family="Inter, Arial, Helvetica, sans-serif">One adversary can appear to be many different peers</text>
+
+                <rect x="62" y="54" width="286" height="180" rx="18" fill="rgba(255,122,122,0.05)" stroke="rgba(255,122,122,0.42)" stroke-width="2" stroke-dasharray="8 8"></rect>
+                <text x="155" y="80" text-anchor="middle" fill="rgba(255,255,255,0.88)" font-size="14" font-family="InterMedium, Arial, Helvetica, sans-serif">Single operator</text>
+
+                <circle cx="150" cy="145" r="34" fill="rgba(37,28,15,1)" stroke="#ff7a7a" stroke-width="2.5"></circle>
+                <text x="150" y="150" text-anchor="middle" fill="white" font-size="14" font-family="Inter, Arial, Helvetica, sans-serif">Attacker</text>
+
+                <text x="260" y="80" text-anchor="middle" fill="rgba(255,255,255,0.88)" font-size="13" font-family="InterMedium, Arial, Helvetica, sans-serif">Sybil IDs</text>
+
+                <line x1="184" y1="145" x2="294" y2="95" stroke="#ff7a7a" stroke-width="2.5"></line>
+                <line x1="184" y1="145" x2="294" y2="135" stroke="#ff7a7a" stroke-width="2.5"></line>
+                <line x1="184" y1="145" x2="294" y2="175" stroke="#ff7a7a" stroke-width="2.5"></line>
+                <line x1="184" y1="145" x2="294" y2="215" stroke="#ff7a7a" stroke-width="2.5"></line>
+
+                <circle cx="314" cy="95" r="20" fill="rgba(255,122,122,0.1)" stroke="#ff7a7a" stroke-width="2.2"></circle>
+                <circle cx="314" cy="135" r="20" fill="rgba(255,122,122,0.1)" stroke="#ff7a7a" stroke-width="2.2"></circle>
+                <circle cx="314" cy="175" r="20" fill="rgba(255,122,122,0.1)" stroke="#ff7a7a" stroke-width="2.2"></circle>
+                <circle cx="314" cy="215" r="20" fill="rgba(255,122,122,0.1)" stroke="#ff7a7a" stroke-width="2.2"></circle>
+
+                <text x="314" y="99" text-anchor="middle" fill="white" font-size="11.5" font-family="Inter, Arial, Helvetica, sans-serif">ID D</text>
+                <text x="314" y="139" text-anchor="middle" fill="white" font-size="11.5" font-family="Inter, Arial, Helvetica, sans-serif">ID E</text>
+                <text x="314" y="179" text-anchor="middle" fill="white" font-size="11.5" font-family="Inter, Arial, Helvetica, sans-serif">ID F</text>
+                <text x="314" y="219" text-anchor="middle" fill="white" font-size="11.5" font-family="Inter, Arial, Helvetica, sans-serif">ID G</text>
+
+                <text x="585" y="80" text-anchor="middle" fill="rgba(255,255,255,0.88)" font-size="14" font-family="InterMedium, Arial, Helvetica, sans-serif">Honest peers</text>
+
+                <line x1="334" y1="95" x2="470" y2="105" stroke="rgba(255,122,122,0.7)" stroke-width="2"></line>
+                <line x1="334" y1="135" x2="610" y2="150" stroke="rgba(255,122,122,0.7)" stroke-width="2"></line>
+                <line x1="334" y1="175" x2="500" y2="220" stroke="rgba(255,122,122,0.7)" stroke-width="2"></line>
+                <line x1="334" y1="215" x2="610" y2="150" stroke="rgba(255,122,122,0.7)" stroke-width="2"></line>
+
+                <line x1="500" y1="105" x2="610" y2="150" stroke="rgba(0,247,255,0.52)" stroke-width="2"></line>
+                <line x1="610" y1="150" x2="500" y2="220" stroke="rgba(0,247,255,0.52)" stroke-width="2"></line>
+                <line x1="500" y1="105" x2="500" y2="220" stroke="rgba(0,247,255,0.52)" stroke-width="2"></line>
+
+                <circle cx="500" cy="105" r="30" fill="rgba(0,247,255,0.08)" stroke="#00f7ff" stroke-width="2.5"></circle>
+                <circle cx="610" cy="150" r="30" fill="rgba(0,247,255,0.08)" stroke="#00f7ff" stroke-width="2.5"></circle>
+                <circle cx="500" cy="220" r="30" fill="rgba(0,247,255,0.08)" stroke="#00f7ff" stroke-width="2.5"></circle>
+
+                <text x="500" y="110" text-anchor="middle" fill="white" font-size="13" font-family="Inter, Arial, Helvetica, sans-serif">Peer A</text>
+                <text x="610" y="155" text-anchor="middle" fill="white" font-size="13" font-family="Inter, Arial, Helvetica, sans-serif">Peer B</text>
+                <text x="500" y="225" text-anchor="middle" fill="white" font-size="13" font-family="Inter, Arial, Helvetica, sans-serif">Peer C</text>
+
+                <text x="380" y="278" text-anchor="middle" fill="rgba(255,255,255,0.92)" font-size="14" font-family="InterMedium, Arial, Helvetica, sans-serif">The network sees several peers, even though they are all controlled by the same adversary.</text>
+            </svg>
+            <figcaption>
+                A Sybil attack makes one participant look like many, giving the attacker disproportionate influence over peer discovery, voting, or message flow.
+            </figcaption>
+        </figure>
+        <h3>Eclipse Attacks</h3>
+        <p>
+        	Eclipse attacks are funkier because less people know about them (the majority of people implementing decentralised peer-to-peer networks are aware of Sybil attacks due to headlines over the years), and those that <em>do</em> know about them are typically not the same people that are responsible for protecting against them!
+        </p>
+        <p>
+        		In an Eclipse attack, an attacker targets peers <em>individually</em>; they may find some way to influence the target's peer selection algorithm so that they are skewed towards the attacker's own endpoints, and from there they can attempt to isolate the targeted node such that the attacker controlled node(s) constitutes most or all of the target's "known good" neighbour peers.
+         	From this point, the attacker will generally use their majority position to influence that node's understanding of the network. Depending on why the peer was targeted, this newfound misunderstanding may be used to extract data from the target, or they may be used as a peer which acts on behalf of the attacker, and can therefore be used to support performing Eclipse attacks on other nodes, or - at a certain scale - performing a Sybil attack on the entire network. It really depends on the protocol and its implementation though!
+        </p>
+        <figure class="bft-visual">
+            <svg viewBox="0 0 760 300" role="img" aria-labelledby="eclipse-visual-title eclipse-visual-desc">
+                <title id="eclipse-visual-title">Eclipse attack visualisation</title>
+                <desc id="eclipse-visual-desc">A target node is surrounded by attacker-controlled peers, which dominate its local view of the network and limit contact with honest nodes.</desc>
+
+                <text x="380" y="24" text-anchor="middle" fill="rgba(255,255,255,0.92)" font-size="16" font-family="Inter, Arial, Helvetica, sans-serif">A target can be isolated by surrounding it with attacker-controlled peers</text>
+
+                <text x="102" y="62" text-anchor="middle" fill="rgba(255,255,255,0.88)" font-size="14" font-family="InterMedium, Arial, Helvetica, sans-serif">Honest network</text>
+                <line x1="140" y1="120" x2="210" y2="90" stroke="rgba(0,247,255,0.52)" stroke-width="2"></line>
+                <line x1="210" y1="90" x2="220" y2="180" stroke="rgba(0,247,255,0.52)" stroke-width="2"></line>
+                <line x1="140" y1="120" x2="220" y2="180" stroke="rgba(0,247,255,0.52)" stroke-width="2"></line>
+                <circle cx="140" cy="120" r="28" fill="rgba(0,247,255,0.08)" stroke="#00f7ff" stroke-width="2.5"></circle>
+                <circle cx="210" cy="90" r="28" fill="rgba(0,247,255,0.08)" stroke="#00f7ff" stroke-width="2.5"></circle>
+                <circle cx="220" cy="180" r="28" fill="rgba(0,247,255,0.08)" stroke="#00f7ff" stroke-width="2.5"></circle>
+                <text x="140" y="125" text-anchor="middle" fill="white" font-size="13" font-family="Inter, Arial, Helvetica, sans-serif">Peer A</text>
+                <text x="210" y="95" text-anchor="middle" fill="white" font-size="13" font-family="Inter, Arial, Helvetica, sans-serif">Peer B</text>
+                <text x="220" y="185" text-anchor="middle" fill="white" font-size="13" font-family="Inter, Arial, Helvetica, sans-serif">Peer C</text>
+
+                <line x1="248" y1="108" x2="340" y2="120" stroke="rgba(255,255,255,0.28)" stroke-width="2" stroke-dasharray="8 8"></line>
+                <line x1="248" y1="172" x2="340" y2="180" stroke="rgba(255,255,255,0.28)" stroke-width="2" stroke-dasharray="8 8"></line>
+                <text x="285" y="96" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="12" font-family="Inter, Arial, Helvetica, sans-serif">Blocked view</text>
+
+                <rect x="332" y="58" width="348" height="176" rx="18" fill="rgba(255,122,122,0.05)" stroke="rgba(255,122,122,0.42)" stroke-width="2" stroke-dasharray="8 8"></rect>
+                <text x="506" y="52" text-anchor="middle" fill="rgba(255,255,255,0.88)" font-size="14" font-family="InterMedium, Arial, Helvetica, sans-serif">Target's peer set is dominated by the attacker</text>
+
+                <circle cx="438" cy="102" r="28" fill="rgba(255,122,122,0.1)" stroke="#ff7a7a" stroke-width="2.5"></circle>
+                <circle cx="574" cy="102" r="28" fill="rgba(255,122,122,0.1)" stroke="#ff7a7a" stroke-width="2.5"></circle>
+                <circle cx="438" cy="188" r="28" fill="rgba(255,122,122,0.1)" stroke="#ff7a7a" stroke-width="2.5"></circle>
+                <circle cx="574" cy="188" r="28" fill="rgba(255,122,122,0.1)" stroke="#ff7a7a" stroke-width="2.5"></circle>
+
+                <line x1="438" y1="102" x2="506" y2="145" stroke="#ff7a7a" stroke-width="2.5"></line>
+                <line x1="574" y1="102" x2="506" y2="145" stroke="#ff7a7a" stroke-width="2.5"></line>
+                <line x1="438" y1="188" x2="506" y2="145" stroke="#ff7a7a" stroke-width="2.5"></line>
+                <line x1="574" y1="188" x2="506" y2="145" stroke="#ff7a7a" stroke-width="2.5"></line>
+
+                <circle cx="506" cy="145" r="34" fill="rgba(37,28,15,1)" stroke="#ffd36b" stroke-width="2.5"></circle>
+                <text x="506" y="140" text-anchor="middle" fill="white" font-size="14" font-family="Inter, Arial, Helvetica, sans-serif">Target</text>
+                <text x="506" y="158" text-anchor="middle" fill="white" font-size="14" font-family="Inter, Arial, Helvetica, sans-serif">node</text>
+
+                <text x="438" y="107" text-anchor="middle" fill="white" font-size="12" font-family="Inter, Arial, Helvetica, sans-serif">Atk 1</text>
+                <text x="574" y="107" text-anchor="middle" fill="white" font-size="12" font-family="Inter, Arial, Helvetica, sans-serif">Atk 2</text>
+                <text x="438" y="193" text-anchor="middle" fill="white" font-size="12" font-family="Inter, Arial, Helvetica, sans-serif">Atk 3</text>
+                <text x="574" y="193" text-anchor="middle" fill="white" font-size="12" font-family="Inter, Arial, Helvetica, sans-serif">Atk 4</text>
+
+                <text x="380" y="278" text-anchor="middle" fill="rgba(255,255,255,0.92)" font-size="14" font-family="InterMedium, Arial, Helvetica, sans-serif">The target still sees neighbours, but most of them are controlled by the adversary.</text>
+            </svg>
+            <figcaption>
+                An Eclipse attack isolates one node's local view of the network by filling its peer set with attacker-controlled endpoints.
+            </figcaption>
+        </figure>
+        <h3>Some Examples</h3>
+        <p>
+        	Just to preface this section with some disclaimers; while the below example is based on real examples of vulnerabilities discovered in the wild,
+         	steps have been taken to replace certain aspects of the code with generic data (in this case, I've rewritten all of the vulnerable functions from scratch, and
+          	swapped out all project-specific tokens).
+        </p>
+        <h4>DOORSTOP: Attacking a BFT Network with Targeted Communication Outages</h4>
+        <p>
+	       	Imagine each [network] node in the [network] network as a building: 11 Wall Street, New York City.
+        </p>
+        <p>
+	        This is the trading floor of the New York Stock Exchange and for the purposes of this analogy, let's say that people can only buy/sell a single stock each day within this building, <span class="code inline-code">\$VOTE</span>.
+        </p>
+        <p>
+	        Different people come into this building and either buy or sell (short) a single <span class="code inline-code">\$VOTE</span> share each day, and the volume of buy and sell transactions on the <span class="code inline-code">\$VOTE</span> stock are collated at the end of the trading week. The most popular of the two (buy/sell) results in all of the traders who made that kind of transaction recieving a dividend (monetary bonus for choosing the most popular option of buy/sell for that week).
+        </p>
+        <p>
+	        This factually-creative (read: <em>inaccurate</em>) analogy is intended to draw a parallel to [network] which relies upon quasi-voting mechanisms to come to conclusions about the state of the [network] network, and where voters are incentivised to have their version of the truth be the correct one - especially when their version of the truth isn't the correct/genuine one.
+	        In this example, the building on Wall Street uses a door to let people into the building; what would happen if - on their way into the building one Friday morning - a malicious trader decided to place a doorstop under the door?
+        </p>
+        <ul>
+        	<li>Nobody else could get into the building to make <em>their own</em> trades for that day/week.</li>
+			<li>The malicious trader could make their trades and nobody could contradict their position on <span class="code inline-code">\$VOTE</span>, thereby guaranteeing that their position is the most popular (in the case of [network], this means that the victim node trusts the malicious actor's account of the true state of the entire network).</li>
+			<li>The other traders may be able to team up and collectively knock down the blocked door, however in the time that it takes to achieve this, the markets may have closed, the weekend would have arrived, and the malicious actor would still have achieved their goal.</li>
+        </ul>
+        <p>
+        	This is a direct parallel to the approach that the DOORSTOP attack takes on influencing [network]'s consensus system; by selecting a given node and blocking other clients/validators/... from connecting to it, an adversary can have outweighed influence on any consensus which takes place within that node or others.
+        </p>
+        <h5>Context</h5>
+        <div>
+	        <p>
+		       	[network] relies upon a byzantine fault tolerant (BFT) network in order to communicate updates to its directed acyclic graph (DAG). In the classic $3f + 1$ setting used as a baseline, the network needs at least $2f + 1$ honest/conforming nodes and can tolerate at most $f$ byzantine/faulty ones.
+	        </p>
+	        <p>
+		        This DAG is used to store the state of the [network] network, and should be nearly identical in the memory of every [network] node. If an adversary were able to selectively turn conforming nodes into byzantine ones, they would be able to break DAG synchronicity and thereby exploit blockchain features which rely upon that basic principle.
+	        </p>
+	        <p>
+		        DOORSTOP is a novel chain of denial of service and BFT degradation within the [network] platform/network which - upon being exploited - could lead to catastrophic impacts on the [network] blockchain ledger and its constituent nodes.
+	        </p>
+        </div>
+        <h5>Vulnerability Overview</h5>
+        <div>
+        	<p>
+		In the classic $3f + 1$ BFT model used as a reference point here, safety and liveness hold while at most $f$ nodes are byzantine or otherwise fail to participate as expected. Equivalently, at least $2f + 1$ nodes must remain honest/conforming.
+        	</p>
+        	<p>
+		        For the purposes of adversarial modelling, we tend to assume byzantine nodes as attacker-controlled, however such nodes can also appear faulty for non-malicious reasons (i.e., an off-by-one bug in the communication-round counting mechanism, resource exhaustion, or network partitioning).
+         	</p>
+          	<p>
+		DOORSTOP does not directly break the academic principles behind DAGs/BFTs like <a href="https://aptoslabs.com/pdf/2105.11827.pdf">Narwhal, Tusk</a>, or Bullshark. Instead, it exploits <em>implementation</em> flaws that let an adversary asynchronously make benign clients/nodes appear byzantine from the rest of the network's perspective, effectively increasing the number of byzantine nodes.
+           	</p>
+            <p>
+            	The DOORSTOP attack is split into two parts:
+            </p>
+            <ul>
+            	<li>An attacker being able to arbitrarily halt/delay communication to/from any given node for an arbitrary duration</li>
+             	<li>An attacker utilising this node's isolation to their benefit.</li>
+            </ul>
+        </div>
+        <h5>Part One: Targeted Communication Outages</h5>
+        <div>
+        	<p>Let's take a look at how incoming networked communication works in [network]:</p>
+        	<ul>
+        		<li>Node entrypoint is hit in the client</li>
+        		<li>Boring node initialization ([network specific Git permalinks])</li>
+        		<li>
+        			Initialize the routing (<em>this is where the magic happens</em>)
+        			<ul>
+        				<li>Enable handshake processing</li>
+        				<li>Enable connection reading</li>
+        				<li>Enable connection writing</li>
+        				<li>Enable disconnection</li>
+        				<li>Enable connection handler (<span class="code inline-code">on_connect</span>)</li>
+        				<li>Enable TCP listener</li>
+        				<li>Enable heartbeat module</li>
+        			</ul>
+        		</li>
+        		<li>More boring initialization (signal handlers, notification message loop, etc.)</li>
+        	</ul>
+           	<div class="code block-code" style="border-left: none;border-top: 3px solid rgba(0,247,254,1);">
+               <span class="language-tag">Rust</span><span style="margin-left: 15px;">fn init_message_routing(&self)</span>
+               <hr>
+               <code>
+               self.setup_handshake_processing();
+               self.setup_connection_processing();
+               self.trigger_listener().await;
+               self.heartbeat();
+               </code>
+            </div>
+            <p>
+            	When [network] starts its TCP listener, it spawns a [tech stack] task that waits for new connections and calls the asynchronous <span class="code inline-code">takeover_connection</span> function upon receiving one successfully. This function proceeds to check if the connection can proceed using two functions, and if it may, the TCP stream is passed to a function which prepares it to receive [network] messages/communications (probably starting with a responder-sided handshake).
+            </p>
+            <p>
+	           	The vulnerability within [network] predominantly resides within one of the aforementioned functions that confirms whether a connection may proceed; namely <span class="code inline-code">should_i_add_connection</span>. This function compares the number of already-connected peers/nodes to <span class="code inline-code">self.maximum_connections</span> (currently defined as <span class="code inline-code">256</span>), and if the former value is larger or equal to the latter, the incoming connection is rejected. Similarly, the connection is rejected if the already-connected peer volume plus pending connections exceeds the same threshold.
+            </p>
+            <p>
+            	This connection-granting function does not account for whether the incoming/existing connections all originate from a single peer, meaning that a single origin IP address (i.e., a low-powered laptop on any average internet connection) could create <span class="code inline-code">256</span> connections to any given node, and hold them open until they are dropped (perhaps <span class="code inline-code">4,000ms</span>?). This approach would effectively cause a 'blackout' from the perspective of the targeted node, where there appear to be no incoming connections from new nodes other than the attacker.
+            </p>
+            <p style="margin-left: 5vw;">
+            	<i>Note: In a realistic environment, more than 256 outgoing TCP requests would be needed in order to fill the victim's operating system TCP queue (Linux example: <span class="code inline-code">SOMAXCONN</span> is defined as <span class="code inline-code">4096</span> on Linux. It can be overwritten but [network] does not suggest this in any setup documentation).</i>
+            </p>
+        </div>
+        <h5>Part Two: Corrupting DAG via Unresponsive or Partitioned Nodes</h5>
+        <div>
+        	<p>
+         		So, an adversary can selectively block communication between any given two nodes; what next? A denial of service is great when we want to cripple a network's economy or the financial situation of those relying upon the network (targeting the network's availability), however it doesn't really impact the confidentiality or integrity of the data being shared across the network, nor does it provide financial benefit to the malicious actor - not directly, anyway.
+         	</p>
+            <h5>Leader Election Bias</h5>
+            <div>
+           		<p>
+		The [network] Whitepaper explains [network] as operating with multiple monotonically-increasing rounds. If $R(x)$ denotes the round number commenced at interval $x \in X$, then $\forall x_1, x_2 \in X, x_1 > x_2 \Rightarrow{} R(x_1) > R(x_2)$. The functionality employed on a given round depends upon whether $R(x)$ is odd or even.
+            	</p>
+             	<p>
+		While the whitepaper explains it much better than I could hope (and probably better than I currently understand), it should be noted that the leader of any odd-numbered round $r$, where $r \in 2\mathbb{Z} + 1$, is decided on the following even round $r + 1$. Therefore, at the time of participating in a given odd round, the adversary has no knowledge of who the leader is until the next round concludes.
+              	</p>
+               	<p>This leadership selection/election process comes down to two key points:</p>
+               	<ul>
+               		<li>
+                			<p>Selecting a leader</p>
+                			<p>Leader election, as defined in the [network] whitepaper is an extremely simple process; it just involves using a cryptographically-secure pseudorandom number generator (CSPRNG, which [network] uses a cryptographic hash for) to sample a single node from the committee of bonded validators. An interesting fact to note is the following:</p>
+                			<blockquote class="bft-quote">
+                				<p>"A validator's chance of leading a round, on average, is proportional to their stake divided by the total stake in the committee."</p>
+                			</blockquote>
+                			<p>
+	Accordingly, if leader selection is modelled as stake-weighted sampling from the validator committee, let $L$ denote the validator selected to lead a round, let $V$ denote the set of bonded validators, let $s(v)$ denote the stake held by validator $v$, and let $s(V) = \sum_{u \in V} s(u)$ denote the committee's total stake. Then, for any validator $v \in V$, the probability that $v$ is selected is $P(L = v) = \frac{s(v)}{s(V)}$. In other words, a validator's chance of being selected is its own stake divided by the total stake of the committee. If an adversary can reduce the effective total stake participating in the protocol via the aforementioned TCP 'blackout' attack while preserving its own stake, then its probability of selection increases without requiring additional validators to be bonded into the committee.
+                    		</p>
+               		</li>
+               		<li>
+	                    	<p>'Electing' that leader (confirming the availability threshold of $f + 1$)</p>
+	                    	<p>Electing the previously selected leader simply requires confirming that they are available and accessible from other nodes. In order to achieve this, [network] says that - during leader selection - nodes should ensure that the selected validator's batch certificate has been present in at least $f + 1$ of the other nodes' submissions for the previous even round.</p>
+	                    	<p>Whilst the above 'Selecting a leader' attack vector is independent of this stage, another potential impact is possible by forcing the non-byzantine, properly elected leader of a round to have its certificate omitted from the network. As an example, if a leader's batch certificate is only present within exactly $f + 1$ node submissions (the bare minimum for being accepted) on an even round $r$, a malicious actor must only block communication from/to one node to reduce the internal availability measurement of the node to $f$, thus blocking them from leading the preceding odd round $r - 1$.</p>
+               		</li>
+               	</ul>
+            </div>
+            <h5>Quorum Desynchronization</h5>
+            <div>
+	            <p>
+	            	Let's take another look at the way that the [network] protocol operates its monotonically-increasing rounds, except this time we'll focus on how <a href="https://vukolic.com/QuorumsOrigin.pdf">quorum</a> intersection is achieved.
+	            </p>
+	            <p>
+	            	The quorum approach utilised within [network] is a 'byzantine/dissemination quorum' system as explained by Marko Vukolić in the above-linked paper.
+	            </p>
+	            <p>
+	            	[network] doesn't attempt to have every node connect to every other node, likely because of the significant resource implications that such an approach would have upon data dissemination at pace. Instead, a 'quorum' intersection is used to guarantee that communication originating from a given node has a valid route to every other node, just without directly having the communicating node create connections to every node in the [network] network.
+	            </p>
+	            <p>
+	            	If we imagine five disconnected nodes that attempt to make up a network, we'd need to start with a representation such as the below (the coloured circles within each node is their DAG, possibly cached from the last time they were all connected but that isn't important):
+	            </p>
+	            <figure class="bft-visual bft-inline-figure">
+	            	<img src="./illustration-01.png" alt="Five disconnected nodes, each with its own local DAG state.">
+	            	<figcaption>Five disconnected nodes before any quorum overlap exists.</figcaption>
+	            </figure>
+	            <p>
+	            	These nodes wouldn't attempt to connect to every other node within the network, but would instead connect to a smaller subset and hope that there is overlap between groups of nodes that spans the entire network.
+	            </p>
+	            <figure class="bft-visual bft-inline-figure">
+	            	<img src="./illustration-02.png" alt="A sparse network where a single node bridges two otherwise separate groups.">
+	            	<figcaption>Sparse connectivity can still span the network if overlap nodes bridge separate groups.</figcaption>
+	            </figure>
+				<p>
+					As you can see, there is only a single node connecting two distinct subsections of the [network] network. This connecting node is randomly sampled from a uniform set of all nodes, meaning that an attacker couldn't just place their own node there, and even if they could, there are likely to be significant numbers of quorum intersections across the network, probably more than $f$ within the context of a $3f + 1$-sized network, anyway.
+				</p>
+				<p>
+					But what if an adversary could identify quorum intersection nodes and selectively prevent communication to/from them?
+				</p>
+    			<figure class="bft-visual bft-inline-figure">
+    				<img src="./illustration-03.png" alt="The bridging quorum intersection node is isolated, preventing traffic between the two groups.">
+    				<figcaption>Disabling a key overlap node can interrupt state propagation across the wider network.</figcaption>
+    			</figure>
+       			<p>
+          				Without this quorum intersection being enabled by the central node in the above images, any changes to the internal state of a node (or set thereof) will be restricted to those nodes, and fail to be propagated to the rest of the network. As a result of this, a <a href="https://learn.bybit.com/en/glossary/definition-chain-split/">chain split</a> may occur:
+          			</p>
+     			<figure class="bft-visual bft-inline-figure">
+     				<img src="./illustration-04.png" alt="The network splits into isolated groups whose DAG states diverge into a chain split.">
+     				<figcaption>Once propagation stops between clusters, their views of the chain can diverge.</figcaption>
+     			</figure>
+            </div>
+            <p class="bft-note">Note: Proof of concept has been pulled, but was included in the original report.</p>
+            <h5>Attack Scaling (Eclipse+Sybil)</h5>
+            <div>
+	            <p>
+	            	Earlier in this report, we established that the attack requires <span class="code inline-code">256</span> concurrent connections in order to fill the client's internal connection budget. Operating systems then add their own listen backlog on top of that, so a longer blackout can be sustained either by continuously refreshing those 256 connections or by also occupying backlog slots.
+	            </p>
+	            <p>
+	            	For back-of-the-envelope sizing, it is clearer to separate those two layers. Let $C = 256$ be the application's connection cap and let $B$ be the operating system's TCP listen backlog. An attacker that wants to keep a victim saturated without precise timing can treat the per-victim socket cost as approximately $C + B$ sockets: 256 active connections plus however many connections can be parked in the backlog waiting to be accepted.
+	            </p>
+	            <p>
+		On Ubuntu 22.04 LTS and macOS Sonoma, taking <span class="code inline-code">SOMAXCONN = 4096</span> gives a per-victim cost of $256 + 4096 = 4352$ sockets. If we treat the 16-bit TCP source-port space as a rough per-source-IP ceiling, then one source IP can sustain at most $\left\lfloor \frac{65535}{4352} \right\rfloor = 15$ simultaneous victim blackouts under those defaults.
+	            </p>
+	            <p>
+		On Windows, if <a href="https://learn.microsoft.com/en-us/cpp/mfc/reference/casyncsocket-class?view=msvc-170&viewFallbackFrom=vs-2019#listen"><span class="code inline-code">nConnectionBacklog</span></a> is capped at five, the same approximation gives a per-victim cost of $256 + 5 = 261$ sockets and therefore $\left\lfloor \frac{65535}{261} \right\rfloor = 251$ simultaneous victim blackouts per source IP.
+	            </p>
+	            <p>
+		Under this simplified model, a network of 15,000 Ubuntu/macOS nodes would require about $\left\lceil \frac{15000}{15} \right\rceil = 1000$ attacker-controlled source IPs/hosts to keep every node blacked out simultaneously. Under the Windows backlog assumption above, the same arithmetic gives $\left\lceil \frac{15000}{251} \right\rceil = 60$ attacker-controlled source IPs/hosts. Those figures are rough capacity estimates rather than protocol guarantees, but they are still far below the $f = 4999$ threshold implied by a 15,000-node $3f + 1$ network.
+	            </p>
+            </div>
+	            <p>This report has illustrated a novel approach to destabilizing the [network] network by leveraging a denial of service vulnerability to erode the runtime conditions under which the network's byzantine fault tolerance assumptions are expected to hold.</p>
+        </div>
+    </body>
+    <script src="../../blog.js"></script>
+</html>
