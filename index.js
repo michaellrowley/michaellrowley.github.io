@@ -25,8 +25,15 @@ filterButtons.forEach((button) => {
         const filter = button.dataset.filter;
         filterButtons.forEach((item) => item.classList.toggle('is-active', item === button));
         projectGroups.forEach((group) => {
-            const matches = filter === 'all' || group.dataset.category.split(' ').includes(filter);
+            const isVulnerabilityFilter = filter === 'vulnerabilities';
+            const isProjectFilter = filter === 'research' || filter === 'software';
+            const hasDisclosures = Boolean(group.querySelector('.disclosure-grid'));
+            const matches = filter === 'all'
+                || (isVulnerabilityFilter && hasDisclosures)
+                || (isProjectFilter && group.dataset.category.split(' ').includes(filter));
             group.classList.toggle('is-hidden', !matches);
+            group.classList.toggle('is-vulnerability-view', isVulnerabilityFilter && matches);
+            group.classList.toggle('is-project-view', isProjectFilter && matches);
             if (matches && !reducedMotion) {
                 group.classList.remove('is-visible');
                 requestAnimationFrame(() => group.classList.add('is-visible'));
@@ -48,6 +55,33 @@ if (reducedMotion || !('IntersectionObserver' in window)) {
         });
     }, { threshold: 0.12, rootMargin: '0px 0px -35px' });
     revealItems.forEach((item) => revealObserver.observe(item));
+}
+
+const kernelDiagram = document.querySelector('.kernel-diagram');
+if (kernelDiagram && !reducedMotion) {
+    const stack = kernelDiagram.querySelector('.kernel-stack');
+    const layers = kernelDiagram.querySelectorAll('.kernel-layer');
+    const hero = document.querySelector('.hero');
+    let frame = 0;
+
+    const updateKernelDiagram = () => {
+        frame = 0;
+        const scrollStart = hero ? hero.offsetTop : 0;
+        const progress = Math.min(1, Math.max(0, (window.scrollY - scrollStart) / (window.innerHeight * 0.95)));
+        stack.style.setProperty('--diagram-turn', `${progress * 43.2}deg`);
+        stack.style.setProperty('--diagram-scale', `${0.84 + progress * 0.05}`);
+        layers.forEach((layer, index) => {
+            layer.style.setProperty('--layer-z', `${index * 12 + progress * index * 27}px`);
+        });
+    };
+
+    const requestKernelUpdate = () => {
+        if (!frame) frame = window.requestAnimationFrame(updateKernelDiagram);
+    };
+
+    window.addEventListener('scroll', requestKernelUpdate, { passive: true });
+    window.addEventListener('resize', requestKernelUpdate);
+    updateKernelDiagram();
 }
 
 const year = document.getElementById('year');

@@ -1,1 +1,5 @@
 ## This is my personal website, it can be accessed via [this](https://www.michaelrowley.dev/) link or by navigating to ``https://www.michaelrowley.dev/``.
+
+### Research posts
+
+Research pages keep their existing direct URLs, but their HTML entry points are now thin renderers. Shared reading chrome, navigation, table-of-contents generation, math loading, embedded-script hydration, and reading progress live in `research/post.js` and `research/blog.css`. Each post's content and metadata lives beside its page in a `post.tex` source. Prose is authored in TeX structure (`\\section`, `\\subsection`, `\\emph`, `\\href`, `itemize`, and `enumerate`) and rendered in the browser. Explicit `rawhtml` blocks are reserved for browser-native material such as SVG diagrams, Gists, plots, video, and complex code samples that cannot be represented faithfully by the lightweight renderer.

@@ -6,7 +6,7 @@
     <meta name="description" content="Michael Rowley — software engineer and cybersecurity researcher.">
     <link rel="stylesheet" href="./index.css">
     <link rel="icon" type="image/x-icon" href="./favicon.ico">
-    <title>Michael Rowley — Secure software, curious systems</title>
+    <title>Michael Rowley — Software engineer and security researcher</title>
 </head>
 <body>
     <div class="ambient ambient-one" aria-hidden="true"></div>
@@ -14,16 +14,13 @@
     <div class="grain" aria-hidden="true"></div>
 
     <header class="site-header">
-        <a class="wordmark" href="#top" aria-label="Michael Rowley home">
-            <span class="wordmark-mark">MR</span>
-            <span>Michael Rowley</span>
-        </a>
+        <a class="wordmark" href="#top" aria-label="Michael Rowley home">Michael Rowley</a>
         <nav class="site-nav" aria-label="Primary navigation">
             <a href="#about">About</a>
             <a href="#work">Work</a>
             <a href="#contact">Contact</a>
         </nav>
-        <a class="header-status" href="#work"><span class="status-dot"></span>Researching &amp; developing</a>
+
     </header>
 
     <main id="top">
@@ -31,27 +28,28 @@
             <div class="hero-copy reveal">
                 <p class="eyebrow"><span class="eyebrow-line"></span>Independent software engineer / security researcher</p>
                 <h1 id="hero-title">Michael<br><span>Rowley</span></h1>
-                <p class="hero-lede">Researching &amp; Developing<br><strong>Secure Software</strong></p>
+                <p class="hero-lede">Software engineering<br><strong>Security research</strong></p>
                 <div class="hero-actions">
-                    <a class="button button-primary" href="#work">Explore the work <span aria-hidden="true">↓</span></a>
-                    <a class="button button-quiet" href="mailto:michaellrowley@protonmail.com">Start a conversation <span aria-hidden="true">↗</span></a>
+                    <a class="button button-primary" href="#work">View the work <span aria-hidden="true">↓</span></a>
+                    <a class="button button-quiet" href="mailto:michaellrowley@protonmail.com">Email me <span aria-hidden="true">↗</span></a>
                 </div>
             </div>
 
-            <div class="hero-visual reveal" aria-label="A living diagram representing systems under observation">
-                <div class="orbit orbit-outer"></div>
-                <div class="orbit orbit-middle"></div>
-                <div class="orbit orbit-inner"></div>
-                <div class="orbit-node node-one"></div>
-                <div class="orbit-node node-two"></div>
-                <div class="orbit-node node-three"></div>
-                <div class="signal-card">
-                    <div class="signal-card-top"><span>LIVE / 01</span><span class="signal-bars"><i></i><i></i><i></i><i></i></span></div>
-                    <div class="signal-graph" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-                    <div class="signal-card-bottom"><strong>systems under<br>observation</strong><span>08:42:17<br>UTC</span></div>
-                </div>
-                <span class="visual-label visual-label-top">observe / question / improve</span>
-                <span class="visual-label visual-label-bottom">⬡  secure by curiosity</span>
+            <div class="hero-visual reveal">
+                <figure class="kernel-diagram">
+
+                    <div class="kernel-stage" role="img" aria-label="Operating system layers from hardware to applications">
+                        <div class="kernel-stack">
+                            <div class="kernel-layer layer-hardware" style="--layer-z: 0px"><span class="layer-annotation annotation-left"><span class="annotation-line"></span><span class="annotation-text">Hardware</span></span></div>
+                            <div class="kernel-layer layer-drivers" style="--layer-z: 12px"><span class="layer-annotation"><span class="annotation-line"></span><span class="annotation-text">Device drivers</span></span></div>
+                            <div class="kernel-layer layer-vfs" style="--layer-z: 24px"><span class="layer-annotation annotation-left"><span class="annotation-line"></span><span class="annotation-text">Virtual file system</span></span></div>
+                            <div class="kernel-layer layer-memory" style="--layer-z: 36px"><span class="layer-annotation"><span class="annotation-line"></span><span class="annotation-text">Memory manager</span></span></div>
+                            <div class="kernel-layer layer-process" style="--layer-z: 48px"><span class="layer-annotation annotation-left"><span class="annotation-line"></span><span class="annotation-text">Process scheduler</span></span></div>
+                            <div class="kernel-layer layer-syscall" style="--layer-z: 60px"><span class="layer-annotation"><span class="annotation-line"></span><span class="annotation-text">System calls</span></span></div>
+                            <div class="kernel-layer layer-user" style="--layer-z: 72px"><span class="layer-annotation annotation-left"><span class="annotation-line"></span><span class="annotation-text">Applications / user space</span></span></div>
+                        </div>
+                    </div>
+                </figure>
             </div>
         </section>
 
@@ -59,18 +57,18 @@
             <div class="proof-item"><span class="proof-number">50<span>+</span></span><span class="proof-label">vulnerabilities<br>disclosed</span></div>
             <div class="proof-divider" aria-hidden="true"></div>
             <div class="proof-item"><span class="proof-number proof-word">GSEC</span><span class="proof-label">certified<br>professional</span></div>
-            <p class="proof-note">Responsible disclosure is a<br>practice, not a finish line.</p>
+
         </section>
 
         <section class="about section-wrap" id="about" aria-labelledby="about-title">
             <div class="section-index">01 <span>/</span> about</div>
             <div class="about-grid">
-                <h2 id="about-title">Curiosity is<br><em>a security tool.</em></h2>
+                <h2 id="about-title">Software<br><em>and security.</em></h2>
                 <div class="about-copy">
-                    <p class="large-copy">I'm an enthusiastic <em>software engineer</em> and <em>cybersecurity researcher</em> responsibly disclosing critical software vulnerabilities in interesting technology.</p>
+                    <p class="large-copy">I’m a <em>software engineer</em> and <em>cybersecurity researcher</em>. I build software, investigate systems, and disclose vulnerabilities responsibly.</p>
                     <div class="principles" aria-label="Research principles">
-                        <div><span>01</span><strong>Look closer</strong><p>Understand the system beneath the interface.</p></div>
-                        <div><span>02</span><strong>Make it useful</strong><p>Turn a finding into a clearer, safer next step.</p></div>
+                        <div><span>01</span><strong>Engineering</strong><p>Building software with a focus on systems and networking.</p></div>
+                        <div><span>02</span><strong>Research</strong><p>Analyzing implementations and reporting vulnerabilities.</p></div>
                     </div>
                 </div>
             </div>
@@ -82,7 +80,7 @@
                     <div class="section-index">02 <span>/</span> selected work</div>
                     <h2 id="work-title">Projects &amp; Published<br><em>Vulnerabilities</em></h2>
                 </div>
-                <p class="section-intro">A field guide to experiments, tools, and responsible disclosures. Follow a thread or browse the whole map.</p>
+                <p class="section-intro">Selected projects, tools, and public vulnerability disclosures.</p>
             </div>
             <div class="filter-row reveal" role="group" aria-label="Filter selected work">
                 <span class="filter-label">View</span>
@@ -98,7 +96,7 @@
                     <a class="project-card featured-card" href="./research/posts/bft-doorstop/bft-doorstop.html" target="_blank" rel="noopener">
                         <div class="card-top"><span class="card-icon icon-research">↗</span><span class="card-tag">Deep dive</span></div>
                         <h3>Breaking Decentralized<br>Communication Networks</h3>
-                        <p>A brief explanation of how <em>Byzantine Fault Tolerant</em> networks can be compromised by simple implementation errors that attackers can exploit to escalate themselves into <em>outsized positions of influence</em> over systems based on "decentralized protocols".</p>
+                        <p>How implementation errors in <em>Byzantine Fault Tolerant</em> networks can let an attacker gain disproportionate influence.</p>
                         <span class="card-link">Read the research <b>↗</b></span>
                     </a>
                     <div class="disclosure-grid">
@@ -229,8 +227,8 @@
             <div class="contact-orbit" aria-hidden="true"></div>
             <div class="section-index">03 <span>/</span> contact</div>
             <div class="contact-content">
-                <p class="eyebrow"><span class="eyebrow-line"></span>Have an interesting system?</p>
-                <h2 id="contact-title">Let’s make<br><em>it safer.</em></h2>
+                <p class="eyebrow"><span class="eyebrow-line"></span>Contact</p>
+                <h2 id="contact-title">Discuss a<br><em>project.</em></h2>
                 <a class="contact-link" href="mailto:michaellrowley@protonmail.com">michaellrowley@protonmail.com <span>↗</span></a>
             </div>
         </section>
@@ -239,7 +237,7 @@
     <footer class="site-footer section-wrap">
         <p>© <span id="year">2026</span> Michael Rowley</p>
         <div><a href="https://www.linkedin.com/in/michael--r/" target="_blank" rel="noopener">LinkedIn</a><a href="https://github.com/michaellrowley/" target="_blank" rel="noopener">GitHub</a><a href="mailto:michaellrowley@protonmail.com">Email</a></div>
-        <p class="footer-note">Built with curiosity<span class="footer-pulse"></span></p>
+        <p class="footer-note">Independent software engineer<span class="footer-pulse"></span></p>
     </footer>
     <script src="./index.js"></script>
 </body>
