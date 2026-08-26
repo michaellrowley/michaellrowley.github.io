@@ -156,7 +156,7 @@
                 index += 1;
                 continue;
             }
-            const headingMatch = trimmed.match(/^\\(section|subsection|subsubsection|paragraph)\{([\\s\\S]*)\}$/);
+            const headingMatch = trimmed.match(/^\\(section|subsection|subsubsection|paragraph)\{([\s\S]*)\}$/);
             if (headingMatch) {
                 flushParagraph();
                 const level = { section: 2, subsection: 3, subsubsection: 4, paragraph: 5 }[headingMatch[1]];
@@ -338,7 +338,7 @@
             const meta = readMetadata(source);
             const shell = createShell(meta);
             document.body.replaceChildren(shell);
-            document.title = `${meta.title} — Michael Rowley`;
+            document.title = meta.title;
 
             const article = shell.querySelector('.post-content');
             article.innerHTML = renderTeX(source);
